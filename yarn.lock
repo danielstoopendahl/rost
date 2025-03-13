@@ -318,6 +318,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node@npm:^22.13.10":
+  version: 22.13.10
+  resolution: "@types/node@npm:22.13.10"
+  dependencies:
+    undici-types: "npm:~6.20.0"
+  checksum: 10c0/a3865f9503d6f718002374f7b87efaadfae62faa499c1a33b12c527cfb9fd86f733e1a1b026b80c5a0e4a965701174bc3305595a7d36078aa1abcf09daa5dee9
+  languageName: node
+  linkType: hard
+
 "@types/resolve@npm:1.20.2":
   version: 1.20.2
   resolution: "@types/resolve@npm:1.20.2"
@@ -375,6 +384,22 @@ __metadata:
   version: 6.2.1
   resolution: "ansi-styles@npm:6.2.1"
   checksum: 10c0/5d1ec38c123984bcedd996eac680d548f31828bd679a66db2bdf11844634dde55fec3efa9c6bb1d89056a5e79c1ac540c4c784d592ea1d25028a92227d2f2d5c
+  languageName: node
+  linkType: hard
+
+"antlr4ng-cli@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "antlr4ng-cli@npm:2.0.0"
+  bin:
+    antlr4ng: index.js
+  checksum: 10c0/adc32d95d2173023b630be071320ac395b31abded3b672f85fbc2b7b8bc1279ad0ed417403f79725098f199eba393987822530300d3410106804526aaf1f4020
+  languageName: node
+  linkType: hard
+
+"antlr4ng@npm:^3.0.16":
+  version: 3.0.16
+  resolution: "antlr4ng@npm:3.0.16"
+  checksum: 10c0/01b51d1d73ca12f22dfcf723ba3d769f47b02c32618bc729e3bd227334fa154a0a40b16b0e3d1f245fa5756bf4ebbb94deb296a23d73f052dc90be6a2c477d11
   languageName: node
   linkType: hard
 
@@ -458,6 +483,9 @@ __metadata:
     "@rollup/plugin-node-resolve": "npm:^16.0.0"
     "@rollup/plugin-terser": "npm:^0.4.4"
     "@rollup/plugin-typescript": "npm:^12.1.2"
+    "@types/node": "npm:^22.13.10"
+    antlr4ng: "npm:^3.0.16"
+    antlr4ng-cli: "npm:^2.0.0"
     conductor: "https://github.com/source-academy/conductor.git#0.2.1"
     rollup: "npm:^4.34.1"
     tslib: "npm:^2.8.1"
@@ -1322,6 +1350,13 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 10c0/6fd7e0ed3bf23a81246878c613423730c40e8bdbfec4c6e4d7bf1b847cbb39076e56ad5f50aa9d7ebd89877999abaee216002d3f2818885e41c907caaa192cc4
+  languageName: node
+  linkType: hard
+
+"undici-types@npm:~6.20.0":
+  version: 6.20.0
+  resolution: "undici-types@npm:6.20.0"
+  checksum: 10c0/68e659a98898d6a836a9a59e6adf14a5d799707f5ea629433e025ac90d239f75e408e2e5ff086afc3cace26f8b26ee52155293564593fbb4a2f666af57fc59bf
   languageName: node
   linkType: hard
 
