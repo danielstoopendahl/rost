@@ -28,7 +28,7 @@ this repository is already configured to generate the parser and visitor from yo
 ```bash
 yarn generate-parser
 ```
-this spits out your lexer, parser, and a visitor in src/antlr.
+this spits out your lexer, parser, and a visitor in src/parser/src.
 
 ## implement your evaluator with a visitor
 create a new file (e.g. src/SimpleLangEvaluator.ts) that uses the generated parser. for example:
