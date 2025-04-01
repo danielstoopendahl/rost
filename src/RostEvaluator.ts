@@ -7,12 +7,20 @@ import { RostVisitor } from './parser/grammar/RostVisitor';
 
 class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements RostVisitor<object> {
 
+    private conductor: IRunnerPlugin
+    constructor(conductor: IRunnerPlugin) {
+        super()
+        this.conductor = conductor
+    }
+
     visitProg(ctx: ProgContext): object {
+        this.conductor.sendOutput(`in prog`);
         return {tag: "blk", body: this.visit(ctx.sequence())};
     }
 
     visitSequence(ctx: SequenceContext): object {
         let stmts = []
+        this.conductor.sendOutput(`in statement`);
 
          // Iterate through all statement children
         for (let i = 0; i < ctx.statement().length; i++) {
@@ -26,6 +34,8 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
     }
 
     visitLetStmt(ctx: LetStmtContext): object {
+        this.conductor.sendOutput(`in let`);
+
         return {
             tag: "let",
             id: ctx._id,
@@ -34,6 +44,8 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
     }
 
     visitExpression(ctx: ExpressionContext): object {
+        this.conductor.sendOutput(`in expression`);
+
         if (ctx.getChildCount() === 1) {
             // Literal case
             return {
@@ -74,7 +86,7 @@ export class RostEvaluator extends BasicEvaluator {
     constructor(conductor: IRunnerPlugin) {
         super(conductor);
         this.executionCount = 0;
-        this.visitor = new RostEvaluatorVisitor();
+        this.visitor = new RostEvaluatorVisitor(conductor);
     }
 
     async evaluateChunk(chunk: string): Promise<void> {
@@ -102,9 +114,9 @@ export class RostEvaluator extends BasicEvaluator {
         }  catch (error) {
             // Handle errors and send them to the REPL
             if (error instanceof Error) {
-                this.conductor.sendOutput(`Error: ${error.message}`);
+                this.conductor.sendOutput(`Error1: ${error.message}`);
             } else {
-                this.conductor.sendOutput(`Error: ${String(error)}`);
+                this.conductor.sendOutput(`Error2: ${String(error)}`);
             }
         }
     }
