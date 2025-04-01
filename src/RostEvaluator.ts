@@ -35,13 +35,11 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
 
     visitLetStmt(ctx: LetStmtContext): object {
         this.conductor.sendOutput(`in let`);
-        let ide = ctx.IDENTIFIER().getText();
-        this.conductor.sendOutput(`two`);
-        let ee = this.visit(ctx.expression())
+        let ee = this.visit(ctx.expression() as ExpressionContext)
         this.conductor.sendOutput(`three`);
         return {
             tag: "let",
-            id: ide,
+            id: ctx.IDENTIFIER().getText(),
             expr: ee
         }
     }
