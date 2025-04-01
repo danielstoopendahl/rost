@@ -2,13 +2,27 @@ import { BasicEvaluator } from "conductor/dist/conductor/runner";
 import { IRunnerPlugin } from "conductor/dist/conductor/runner/types";
 import { CharStream, CommonTokenStream, AbstractParseTreeVisitor } from 'antlr4ng';
 import { RostLexer } from './parser/grammar/RostLexer';
-import { ProgContext, RostParser , LetStmtContext, ExpressionContext } from './parser/grammar/RostParser';
+import { ProgContext, RostParser , LetStmtContext, ExpressionContext, SequenceContext } from './parser/grammar/RostParser';
 import { RostVisitor } from './parser/grammar/RostVisitor';
 
 class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements RostVisitor<object> {
 
     visitProg(ctx: ProgContext): object {
         return {tag: "blk", body: this.visit(ctx.sequence())};
+    }
+
+    visitSequence(ctx: SequenceContext): object {
+        let stmts = []
+
+         // Iterate through all statement children
+        for (let i = 0; i < ctx.statement().length; i++) {
+            stmts.push(this.visit(ctx.statement(i)));
+        }
+
+        return {
+            tag: "seq",
+            stmts: stmts
+        }
     }
 
     visitLetStmt(ctx: LetStmtContext): object {
