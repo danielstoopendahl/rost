@@ -67,10 +67,10 @@ export class RostParser extends antlr.Parser {
     public static readonly RULE_argList = 17;
 
     public static readonly literalNames = [
-        null, "'{'", "'}'", "'let'", "':'", "'='", "';'", "'mut'", "'fn'", 
-        "'('", "')'", "'->'", "','", "'return'", "'if'", "'else'", "'while'", 
-        "'break'", "'+'", "'-'", "'*'", "'/'", "'&&'", "'||'", "'=='", "'!='", 
-        "'<='", "'>='", "'<'", "'>'", "'!'"
+        null, "'{'", "'}'", "'l\\u00E5t'", "':'", "'='", "';'", "'mut'", 
+        "'fn'", "'('", "')'", "'->'", "','", "'returnera'", "'om'", "'annars'", 
+        "'medan'", "'bryt'", "'+'", "'-'", "'*'", "'/'", "'&&'", "'||'", 
+        "'=='", "'!='", "'<='", "'>='", "'<'", "'>'", "'!'"
     ];
 
     public static readonly symbolicNames = [
