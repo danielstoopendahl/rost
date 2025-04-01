@@ -1,17 +1,17 @@
 import { BasicEvaluator } from "conductor/dist/conductor/runner";
 import { IRunnerPlugin } from "conductor/dist/conductor/runner/types";
 import { CharStream, CommonTokenStream, AbstractParseTreeVisitor } from 'antlr4ng';
-import { SimpleLangLexer } from './parser/src/SimpleLangLexer';
-import { ExpressionContext, ProgContext, SimpleLangParser } from './parser/src/SimpleLangParser';
-import { SimpleLangVisitor } from './parser/src/SimpleLangVisitor';
+import { RostLexer } from './parser/src/RostLexer';
+import { ExpressionContext, ProgContext, RostParser } from './parser/src/RostParser';
+import { RostVisitor } from './parser/src/RostVisitor';
 
-class SimpleLangEvaluatorVisitor extends AbstractParseTreeVisitor<number> implements SimpleLangVisitor<number> {
-    // Visit a parse tree produced by SimpleLangParser#prog
+class RostEvaluatorVisitor extends AbstractParseTreeVisitor<number> implements RostVisitor<number> {
+    // Visit a parse tree produced by RostParser#prog
     visitProg(ctx: ProgContext): number {
         return this.visit(ctx.expression());
     }
 
-    // Visit a parse tree produced by SimpleLangParser#expression
+    // Visit a parse tree produced by RostParser#expression
     visitExpression(ctx: ExpressionContext): number {
         if (ctx.getChildCount() === 1) {
             // INT case
@@ -55,14 +55,14 @@ class SimpleLangEvaluatorVisitor extends AbstractParseTreeVisitor<number> implem
     }
 }
 
-export class SimpleLangEvaluator extends BasicEvaluator {
+export class RostEvaluator extends BasicEvaluator {
     private executionCount: number;
-    private visitor: SimpleLangEvaluatorVisitor;
+    private visitor: RostEvaluatorVisitor;
 
     constructor(conductor: IRunnerPlugin) {
         super(conductor);
         this.executionCount = 0;
-        this.visitor = new SimpleLangEvaluatorVisitor();
+        this.visitor = new RostEvaluatorVisitor();
     }
 
     async evaluateChunk(chunk: string): Promise<void> {
@@ -70,9 +70,9 @@ export class SimpleLangEvaluator extends BasicEvaluator {
         try {
             // Create the lexer and parser
             const inputStream = CharStream.fromString(chunk);
-            const lexer = new SimpleLangLexer(inputStream);
+            const lexer = new RostLexer(inputStream);
             const tokenStream = new CommonTokenStream(lexer);
-            const parser = new SimpleLangParser(tokenStream);
+            const parser = new RostParser(tokenStream);
             
             // Parse the input
             const tree = parser.prog();
