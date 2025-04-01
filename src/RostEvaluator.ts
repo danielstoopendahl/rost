@@ -2,7 +2,7 @@ import { BasicEvaluator } from "conductor/dist/conductor/runner";
 import { IRunnerPlugin } from "conductor/dist/conductor/runner/types";
 import { CharStream, CommonTokenStream, AbstractParseTreeVisitor } from 'antlr4ng';
 import { RostLexer } from './parser/grammar/RostLexer';
-import { ProgContext, RostParser , LetStmtContext} from './parser/grammar/RostParser';
+import { ProgContext, RostParser , LetStmtContext, ExpressionContext } from './parser/grammar/RostParser';
 import { RostVisitor } from './parser/grammar/RostVisitor';
 
 class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements RostVisitor<object> {
@@ -16,6 +16,37 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
             tag: "let",
             id: ctx._id,
             expr: this.visit(ctx._expr)
+        }
+    }
+
+    visitExpression(ctx: ExpressionContext): object {
+        if (ctx.getChildCount() === 1) {
+            // Literal case
+            return {
+                tag: "lit",
+                val: ctx.getText(),
+            }
+        } else if (ctx.getChildCount() === 2) {
+            // Unary operator case
+            return {
+                tag: "unop",
+                sym: ctx.getChild(0),
+                frst: this.visit(ctx.getChild(1) as ExpressionContext)
+            }
+        } else if (ctx.getChildCount() === 3) {
+            if (ctx.getChild(0).getText() === '(' && ctx.getChild(2).getText() === ')') {
+                // Parenthesized expression
+                return this.visit(ctx.getChild(1) as ExpressionContext);
+            } else {
+                // Binary operation
+                return {
+                    tag: "binop",
+                    sym: ctx.getChild(1),
+                    frst: this.visit(ctx.getChild(0) as ExpressionContext),
+                    scnd: this.visit(ctx.getChild(2) as ExpressionContext)
+                }
+              
+            }
         }
     }
 
