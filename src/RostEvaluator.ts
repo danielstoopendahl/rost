@@ -46,6 +46,7 @@ export class RostEvaluator extends BasicEvaluator {
             
             // Create JSON parse tree
             const json_program = this.visitor.visit(tree);
+            this.conductor.sendOutput(`JSON tree: ${json_program}`);
 
             // TODO: generate microcode
 
