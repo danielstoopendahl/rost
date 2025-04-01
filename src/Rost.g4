@@ -1,6 +1,6 @@
 grammar Rost;
 /* Chane to statement* */
-prog: expression ';' EOF;
+prog: expression EOF;
 
 statement
     : letStmt
@@ -46,7 +46,7 @@ expression
     | expression op=('+'|'-' |'*'|'/') expression
     | expression op=('&&'|'||') expression
     | expression op=('=='|'!='|'<='|'>='|'<'|'>') expression
-    | ('-'|'!') expression
+    | op=('-'|'!') expression
     | functionCallExpression
     | INT
     | BOOL

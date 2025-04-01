@@ -16,7 +16,10 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<number> implements R
         if (ctx.getChildCount() === 1) {
             // INT case
             return parseInt(ctx.getText());
-        } else if (ctx.getChildCount() === 3) {
+        } else if (ctx.getChildCount() === 2){
+            return -parseInt(ctx.getChild(1).getText());
+
+        }else if (ctx.getChildCount() === 3) {
             if (ctx.getChild(0).getText() === '(' && ctx.getChild(2).getText() === ')') {
                 // Parenthesized expression
                 return this.visit(ctx.getChild(1) as ExpressionContext);
