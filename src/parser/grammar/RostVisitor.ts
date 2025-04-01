@@ -6,6 +6,7 @@ import { AbstractParseTreeVisitor } from "antlr4ng";
 import { ProgContext } from "./RostParser.js";
 import { StatementContext } from "./RostParser.js";
 import { BlockContext } from "./RostParser.js";
+import { SequenceContext } from "./RostParser.js";
 import { LetStmtContext } from "./RostParser.js";
 import { MutableContext } from "./RostParser.js";
 import { AssignmentContext } from "./RostParser.js";
@@ -49,6 +50,12 @@ export class RostVisitor<Result> extends AbstractParseTreeVisitor<Result> {
      * @return the visitor result
      */
     visitBlock?: (ctx: BlockContext) => Result;
+    /**
+     * Visit a parse tree produced by `RostParser.sequence`.
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    visitSequence?: (ctx: SequenceContext) => Result;
     /**
      * Visit a parse tree produced by `RostParser.letStmt`.
      * @param ctx the parse tree

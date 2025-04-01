@@ -1,6 +1,6 @@
 grammar Rost;
-/* Chane to statement* */
-prog: expression EOF;
+
+prog: sequence EOF;
 
 statement
     : letStmt
@@ -14,7 +14,9 @@ statement
     | expressionStatement
     ;
 
-block: '{' statement* '}';
+block: '{' sequence '}';
+
+sequence: statement*;
 
 
 letStmt: 'låt' mutable? id=IDENTIFIER ':' type=TYPE '=' expr=expression ';';
