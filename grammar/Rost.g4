@@ -17,7 +17,7 @@ statement
 block: '{' statement* '}';
 
 
-letStmt: 'let' mutable? id=IDENTIFIER ':' type=TYPE '=' expr=expression ';';
+letStmt: 'låt' mutable? id=IDENTIFIER ':' type=TYPE '=' expr=expression ';';
 mutable: 'mut';
 assignment: IDENTIFIER '=' expression ';';
 
@@ -25,20 +25,20 @@ assignment: IDENTIFIER '=' expression ';';
 funDecl: 'fn' id=IDENTIFIER '(' paramList? ')'  ('->' type=TYPE)? body=block;
 paramList: param (',' param)*;
 param: id=IDENTIFIER ':' type=TYPE;
-returnStatement: 'return' expression? ';';
+returnStatement: 'returnera' expression? ';';
 
 
 
 ifStmt
-    : 'if' cond=expression cons=block elseBranch?;
+    : 'om' cond=expression cons=block elseBranch?;
 elseBranch
-    : 'else' block
-    | 'else' ifStmt
+    : 'annars' block
+    | 'annars' ifStmt
     ;
 
 
-whileStmt: 'while' cond=expression block;
-breakStatement: 'break' ';';
+whileStmt: 'medan' cond=expression block;
+breakStatement: 'bryt' ';';
 
 // Add dereference and borrow
 expression
@@ -60,7 +60,7 @@ argList: expression (',' expression)*;
 
 IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]*;
 TYPE: 'bool' | 'i32';
-BOOL: 'true' | 'false';
+BOOL: 'sant' | 'falskt';
 INT: [0-9]+;
 WS: [ \t\r\n]+ -> skip;
 
