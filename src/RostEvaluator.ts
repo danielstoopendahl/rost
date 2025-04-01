@@ -55,7 +55,7 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
             // Unary operator case
             return {
                 tag: "unop",
-                sym: ctx.getChild(0),
+                sym: ctx.getChild(0).getText(),
                 frst: this.visit(ctx.getChild(1) as ExpressionContext)
             }
         } else if (ctx.getChildCount() === 3) {
@@ -66,7 +66,7 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
                 // Binary operation
                 return {
                     tag: "binop",
-                    sym: ctx.getChild(1),
+                    sym: ctx.getChild(1).getText(),
                     frst: this.visit(ctx.getChild(0) as ExpressionContext),
                     scnd: this.visit(ctx.getChild(2) as ExpressionContext)
                 }
@@ -96,7 +96,7 @@ export class RostEvaluator extends BasicEvaluator {
             const lexer = new RostLexer(inputStream);
             const tokenStream = new CommonTokenStream(lexer);
             const parser = new RostParser(tokenStream);
-            this.conductor.sendOutput(`first3`);
+            this.conductor.sendOutput(`first4`);
             // Parse the input
             const tree = parser.prog();
             
