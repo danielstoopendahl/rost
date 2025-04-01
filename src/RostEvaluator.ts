@@ -35,12 +35,10 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
 
     visitLetStmt(ctx: LetStmtContext): object {
         this.conductor.sendOutput(`in let`);
-        let ee = this.visit(ctx.expression() as ExpressionContext)
-        this.conductor.sendOutput(`three`);
         return {
             tag: "let",
             id: ctx.IDENTIFIER().getText(),
-            expr: ee
+            expr: this.visit(ctx.expression() as ExpressionContext)
         }
     }
 
@@ -104,7 +102,7 @@ export class RostEvaluator extends BasicEvaluator {
             
             // Create JSON parse tree
             const json_program = this.visitor.visit(tree);
-            this.conductor.sendOutput(`JSON tree: ${json_program}`);
+            this.conductor.sendOutput(`JSON tree: ${JSON.stringify(json_program)}`);
 
             // TODO: generate microcode
 
