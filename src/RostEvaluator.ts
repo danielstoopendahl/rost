@@ -38,8 +38,8 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
 
         return {
             tag: "let",
-            id: ctx._id,
-            expr: this.visit(ctx._expr)
+            id: ctx.IDENTIFIER(),
+            expr: this.visit(ctx.expression())
         }
     }
 
@@ -97,7 +97,7 @@ export class RostEvaluator extends BasicEvaluator {
             const lexer = new RostLexer(inputStream);
             const tokenStream = new CommonTokenStream(lexer);
             const parser = new RostParser(tokenStream);
-            this.conductor.sendOutput(`first`);
+            this.conductor.sendOutput(`first1`);
             // Parse the input
             const tree = parser.prog();
             
