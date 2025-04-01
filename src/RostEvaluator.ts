@@ -100,7 +100,7 @@ export class RostEvaluator extends BasicEvaluator {
             
             // Parse the input
             const tree = parser.prog();
-            
+            this.conductor.sendOutput(`first`);
             // Create JSON parse tree
             const json_program = this.visitor.visit(tree);
             this.conductor.sendOutput(`JSON tree: ${json_program}`);
