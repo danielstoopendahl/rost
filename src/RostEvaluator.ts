@@ -97,10 +97,10 @@ export class RostEvaluator extends BasicEvaluator {
             const lexer = new RostLexer(inputStream);
             const tokenStream = new CommonTokenStream(lexer);
             const parser = new RostParser(tokenStream);
-            
+            this.conductor.sendOutput(`first`);
             // Parse the input
             const tree = parser.prog();
-            this.conductor.sendOutput(`first`);
+            
             // Create JSON parse tree
             const json_program = this.visitor.visit(tree);
             this.conductor.sendOutput(`JSON tree: ${json_program}`);
