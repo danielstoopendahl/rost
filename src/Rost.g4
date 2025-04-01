@@ -1,6 +1,6 @@
 grammar Rost;
 /* Chane to statement* */
-prog: expression EOF;
+prog: expression ';' EOF;
 
 statement
     : letStmt
