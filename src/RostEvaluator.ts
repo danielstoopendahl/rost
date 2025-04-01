@@ -1,61 +1,25 @@
 import { BasicEvaluator } from "conductor/dist/conductor/runner";
 import { IRunnerPlugin } from "conductor/dist/conductor/runner/types";
 import { CharStream, CommonTokenStream, AbstractParseTreeVisitor } from 'antlr4ng';
-import { RostLexer } from './parser/src/RostLexer';
-import { ExpressionContext, ProgContext, RostParser } from './parser/src/RostParser';
-import { RostVisitor } from './parser/src/RostVisitor';
+import { RostLexer } from './parser/grammar/RostLexer';
+import { ProgContext, RostParser , LetStmtContext} from './parser/grammar/RostParser';
+import { RostVisitor } from './parser/grammar/RostVisitor';
 
-class RostEvaluatorVisitor extends AbstractParseTreeVisitor<number> implements RostVisitor<number> {
-    // Visit a parse tree produced by RostParser#prog
-    visitProg(ctx: ProgContext): number {
-        return this.visit(ctx.expression());
+class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements RostVisitor<object> {
+
+    visitProg(ctx: ProgContext): object {
+        return {tag: "blk", body: this.visit(ctx.sequence())};
     }
 
-    // Visit a parse tree produced by RostParser#expression
-    visitExpression(ctx: ExpressionContext): number {
-        if (ctx.getChildCount() === 1) {
-            // INT case
-            return parseInt(ctx.getText());
-        } else if (ctx.getChildCount() === 2){
-            return -parseInt(ctx.getChild(1).getText());
-
-        }else if (ctx.getChildCount() === 3) {
-            if (ctx.getChild(0).getText() === '(' && ctx.getChild(2).getText() === ')') {
-                // Parenthesized expression
-                return this.visit(ctx.getChild(1) as ExpressionContext);
-            } else {
-                // Binary operation
-                const left = this.visit(ctx.getChild(0) as ExpressionContext);
-                const op = ctx.getChild(1).getText();
-                const right = this.visit(ctx.getChild(2) as ExpressionContext);
-
-                switch (op) {
-                    case '+': return left + right;
-                    case '-': return left - right;
-                    case '*': return left * right;
-                    case '/':
-                        if (right === 0) {
-                            throw new Error("Division by zero");
-                        }
-                        return left / right;
-                    default:
-                        throw new Error(`Unknown operator: ${op}`);
-                }
-            }
+    visitLetStmt(ctx: LetStmtContext): object {
+        return {
+            tag: "let",
+            id: ctx._id,
+            expr: this.visit(ctx._expr)
         }
-        
-        throw new Error(`Invalid expression: ${ctx.getText()}`);
     }
 
-    // Override the default result method from AbstractParseTreeVisitor
-    protected defaultResult(): number {
-        return 0;
-    }
-    
-    // Override the aggregate result method
-    protected aggregateResult(aggregate: number, nextResult: number): number {
-        return nextResult;
-    }
+
 }
 
 export class RostEvaluator extends BasicEvaluator {
@@ -80,11 +44,15 @@ export class RostEvaluator extends BasicEvaluator {
             // Parse the input
             const tree = parser.prog();
             
-            // Evaluate the parsed tree
-            const result = this.visitor.visit(tree);
+            // Create JSON parse tree
+            const json_program = this.visitor.visit(tree);
+
+            // TODO: generate microcode
+
+            // TODO run microcode
             
             // Send the result to the REPL
-            this.conductor.sendOutput(`Result of expression: ${result}`);
+            //this.conductor.sendOutput(`Result of expression: ${result}`);
         }  catch (error) {
             // Handle errors and send them to the REPL
             if (error instanceof Error) {

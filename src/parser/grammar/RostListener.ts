@@ -6,6 +6,7 @@ import { ErrorNode, ParseTreeListener, ParserRuleContext, TerminalNode } from "a
 import { ProgContext } from "./RostParser.js";
 import { StatementContext } from "./RostParser.js";
 import { BlockContext } from "./RostParser.js";
+import { SequenceContext } from "./RostParser.js";
 import { LetStmtContext } from "./RostParser.js";
 import { MutableContext } from "./RostParser.js";
 import { AssignmentContext } from "./RostParser.js";
@@ -58,6 +59,16 @@ export class RostListener implements ParseTreeListener {
      * @param ctx the parse tree
      */
     exitBlock?: (ctx: BlockContext) => void;
+    /**
+     * Enter a parse tree produced by `RostParser.sequence`.
+     * @param ctx the parse tree
+     */
+    enterSequence?: (ctx: SequenceContext) => void;
+    /**
+     * Exit a parse tree produced by `RostParser.sequence`.
+     * @param ctx the parse tree
+     */
+    exitSequence?: (ctx: SequenceContext) => void;
     /**
      * Enter a parse tree produced by `RostParser.letStmt`.
      * @param ctx the parse tree
