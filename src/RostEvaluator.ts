@@ -90,6 +90,7 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
     }
 
     visitBreakStmt(ctx: BreakStatementContext): object{
+        this.conductor.sendOutput("In break")
         return {
             tag: "break"
         }
