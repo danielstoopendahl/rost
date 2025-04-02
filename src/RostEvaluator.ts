@@ -72,9 +72,17 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
                     sym: ctx.getText()
                 }
             }
+            
+            if(ctx.INT() != null){
+                return {
+                    tag: "lit",
+                    val: parseInt(ctx.getText()),
+                }
+            }
+
             return {
                 tag: "lit",
-                val: parseInt(ctx.getText()),
+                val: ctx.getText()
             }
         } else if (ctx.getChildCount() === 2) {
             // Unary operator case
