@@ -17,6 +17,7 @@ import { ReturnStatementContext } from "./RostParser.js";
 import { IfStmtContext } from "./RostParser.js";
 import { WhileStmtContext } from "./RostParser.js";
 import { BreakStatementContext } from "./RostParser.js";
+import { ContinueStmtContext } from "./RostParser.js";
 import { ExpressionContext } from "./RostParser.js";
 import { FunctionCallExpressionContext } from "./RostParser.js";
 import { ArgListContext } from "./RostParser.js";
@@ -167,6 +168,16 @@ export class RostListener implements ParseTreeListener {
      * @param ctx the parse tree
      */
     exitBreakStatement?: (ctx: BreakStatementContext) => void;
+    /**
+     * Enter a parse tree produced by `RostParser.continueStmt`.
+     * @param ctx the parse tree
+     */
+    enterContinueStmt?: (ctx: ContinueStmtContext) => void;
+    /**
+     * Exit a parse tree produced by `RostParser.continueStmt`.
+     * @param ctx the parse tree
+     */
+    exitContinueStmt?: (ctx: ContinueStmtContext) => void;
     /**
      * Enter a parse tree produced by `RostParser.expression`.
      * @param ctx the parse tree
