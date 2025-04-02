@@ -2,7 +2,7 @@ import { BasicEvaluator } from "conductor/dist/conductor/runner";
 import { IRunnerPlugin } from "conductor/dist/conductor/runner/types";
 import { CharStream, CommonTokenStream, AbstractParseTreeVisitor } from 'antlr4ng';
 import { RostLexer } from './parser/grammar/RostLexer';
-import { ProgContext, RostParser , LetStmtContext, ExpressionContext, SequenceContext, AssignmentContext, WhileStmtContext, BreakStatementContext, IfStmtContext, BlockContext, FunDeclContext, ParamListContext, ContinueStmtContext } from './parser/grammar/RostParser';
+import { ProgContext, RostParser , LetStmtContext, ExpressionContext, SequenceContext, AssignmentContext, WhileStmtContext, BreakStatementContext, IfStmtContext, BlockContext, FunDeclContext, ParamListContext, ReturnStatementContext, ContinueStmtContext } from './parser/grammar/RostParser';
 import { RostVisitor } from './parser/grammar/RostVisitor';
 
 class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements RostVisitor<object> {
@@ -128,6 +128,13 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
             sym: ctx.IDENTIFIER().getText(),
             prms: params,
             body: this.visit(ctx.block()),
+        }
+    }
+
+    visitReturnStatement(ctx: ReturnStatementContext): object{
+        return {
+            tag: "ret",
+            expr: this.visit(ctx.expression())
         }
     }
 
