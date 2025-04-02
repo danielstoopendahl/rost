@@ -2,7 +2,7 @@ import { BasicEvaluator } from "conductor/dist/conductor/runner";
 import { IRunnerPlugin } from "conductor/dist/conductor/runner/types";
 import { CharStream, CommonTokenStream, AbstractParseTreeVisitor } from 'antlr4ng';
 import { RostLexer } from './parser/grammar/RostLexer';
-import { ProgContext, RostParser , LetStmtContext, ExpressionContext, SequenceContext, AssignmentContext, IfStmtContext, BlockContext } from './parser/grammar/RostParser';
+import { ProgContext, RostParser , LetStmtContext, ExpressionContext, SequenceContext, AssignmentContext, WhileStmtContext, BreakStatementContext, IfStmtContext, BlockContext } from './parser/grammar/RostParser';
 import { RostVisitor } from './parser/grammar/RostVisitor';
 
 class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements RostVisitor<object> {
@@ -81,6 +81,19 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
         }
     }
 
+    visitWhileStmt(ctx: WhileStmtContext): object{
+        return {
+            tag: "while",
+            pred: this.visit(ctx.expression()),
+            body: this.visit(ctx.block())
+        }   
+    }
+
+    visitBreakStmt(ctx: BreakStatementContext): object{
+        return {
+            tag: "break"
+        }
+    }
     visitIfStmt(ctx: IfStmtContext): object{
         return {
             tag: "cond", // dont distinguish stmt and expr
