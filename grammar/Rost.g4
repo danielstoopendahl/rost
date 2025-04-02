@@ -50,7 +50,8 @@ continueStmt: 'fortsätt' ';';
 // Add dereference and borrow
 expression
     : '(' expression ')'
-    | expression op=('+'|'-' |'*'|'/') expression
+    | expression op=('*'|'/') expression
+    | expression op=('+'|'-') expression
     | expression op=('&&'|'||') expression
     | expression op=('=='|'!='|'<='|'>='|'<'|'>') expression
     | op=('-'|'!') expression
@@ -65,9 +66,10 @@ expression
 functionCallExpression: IDENTIFIER '(' argList? ')';
 argList: expression (',' expression)*;
 
-IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]*;
+
 TYPE: 'bool' | 'i32';
 BOOL: 'sant' | 'falskt';
 INT: [0-9]+;
+IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]*;
 WS: [ \t\r\n]+ -> skip;
 
