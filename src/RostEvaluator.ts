@@ -97,6 +97,7 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
     }
     
     visitContinueStmt(ctx: ContinueStmtContext) : object{
+        this.conductor.sendOutput("In cont")
         return {
             tag: "cont"
         }
