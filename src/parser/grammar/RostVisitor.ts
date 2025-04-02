@@ -17,6 +17,7 @@ import { ReturnStatementContext } from "./RostParser.js";
 import { IfStmtContext } from "./RostParser.js";
 import { WhileStmtContext } from "./RostParser.js";
 import { BreakStatementContext } from "./RostParser.js";
+import { ContinueStmtContext } from "./RostParser.js";
 import { ExpressionContext } from "./RostParser.js";
 import { FunctionCallExpressionContext } from "./RostParser.js";
 import { ArgListContext } from "./RostParser.js";
@@ -114,6 +115,12 @@ export class RostVisitor<Result> extends AbstractParseTreeVisitor<Result> {
      * @return the visitor result
      */
     visitBreakStatement?: (ctx: BreakStatementContext) => Result;
+    /**
+     * Visit a parse tree produced by `RostParser.continueStmt`.
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    visitContinueStmt?: (ctx: ContinueStmtContext) => Result;
     /**
      * Visit a parse tree produced by `RostParser.expression`.
      * @param ctx the parse tree
