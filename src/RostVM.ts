@@ -207,7 +207,7 @@ const is_boolean = x => typeof x === 'boolean'
 const binop_microcode = {
     '+': (x, y)   => (is_number(x) && is_number(y)) ? x + y : 
                      (is_string(x) && is_string(y)) ? x + y : 
-                     Error(`+ expects two numbers" + " or two strings, got: ${x} ${y}`),
+                     Error(`+ expects two numbers or two strings, got: ${typeof x} ${typeof y}`),
     // todo: add error handling to JS for the following, too
     '*':   (x, y) => x * y,
     '-':   (x, y) => x - y,
