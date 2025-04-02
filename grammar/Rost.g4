@@ -39,7 +39,7 @@ elseBranch
     ;
 
 
-whileStmt: 'medan' cond=expression block;
+whileStmt: 'medan' cond=expression body=block;
 breakStatement: 'bryt' ';';
 
 // Add dereference and borrow
