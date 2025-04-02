@@ -74,12 +74,13 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
             }
             
             if(ctx.INT() != null){
+                this.conductor.sendOutput("INT " +ctx.getText())
                 return {
                     tag: "lit",
                     val: parseInt(ctx.getText()),
                 }
             }
-
+            this.conductor.sendOutput("BOOL " + ctx.getText())
             return {
                 tag: "lit",
                 val: ctx.getText()
