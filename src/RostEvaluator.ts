@@ -72,21 +72,14 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
                     sym: ctx.getText()
                 }
             }
+            // Don't know if this is necessary but without all literals are strings.
+            // This creates a problem that 3 + 3 is interpreted as "3" + "3" and results in "33"
             
-            if(ctx.INT() != null){
-                this.conductor.sendOutput("INT " +ctx.getText())
-                return {
-                    tag: "lit",
-                    val: parseInt(ctx.getText()),
-                }
-            }
-
-            this.conductor.sendOutput("BOOL " + ctx.getText())
             return {
                 tag: "lit",
                 val: ctx.getText()
             }
-            
+
         } else if (ctx.getChildCount() === 2) {
             // Unary operator case
             return {
