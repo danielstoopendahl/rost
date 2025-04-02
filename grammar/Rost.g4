@@ -10,7 +10,8 @@ statement
     | block
     | assignment
     | returnStatement
-    | breakStatement       
+    | continueStmt
+    | breakStmt     
   //  | expressionStatement
     ;
 
@@ -44,7 +45,8 @@ elseBranch
  */
 
 whileStmt: 'medan' cond=expression body=block;
-breakStatement: 'bryt' ';';
+breakStmt: 'bryt' ';';
+continueStmt: 'fortsätt' ';';
 
 // Add dereference and borrow
 expression
