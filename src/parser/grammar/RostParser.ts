@@ -557,7 +557,7 @@ export class RostParser extends antlr.Parser {
             this.state = 110;
             localContext._cond = this.expression(0);
             this.state = 111;
-            this.block();
+            localContext._body = this.block();
             }
         }
         catch (re) {
@@ -1381,14 +1381,15 @@ export class IfStmtContext extends antlr.ParserRuleContext {
 
 export class WhileStmtContext extends antlr.ParserRuleContext {
     public _cond?: ExpressionContext;
+    public _body?: BlockContext;
     public constructor(parent: antlr.ParserRuleContext | null, invokingState: number) {
         super(parent, invokingState);
     }
-    public block(): BlockContext {
-        return this.getRuleContext(0, BlockContext)!;
-    }
     public expression(): ExpressionContext {
         return this.getRuleContext(0, ExpressionContext)!;
+    }
+    public block(): BlockContext {
+        return this.getRuleContext(0, BlockContext)!;
     }
     public override get ruleIndex(): number {
         return RostParser.RULE_whileStmt;
