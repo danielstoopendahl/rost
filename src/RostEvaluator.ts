@@ -74,7 +74,7 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
             }
             return {
                 tag: "lit",
-                val: ctx.getText(),
+                val: parseInt(ctx.getText()),
             }
         } else if (ctx.getChildCount() === 2) {
             // Unary operator case
