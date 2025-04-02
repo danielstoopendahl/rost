@@ -1,0 +1,24 @@
+om (sant){
+    låt a = 22*3 + 3;
+}annars{
+    låt mut b = 43;
+}
+
+'{"tag":"blk","body":{"tag":"seq","stmts":[{"tag":"cond","pred":{"tag":"lit","val":"sant"},"cons":{"tag":"blk","body":{"tag":"seq","stmts":[{"tag":"let","sym":"a","expr":{"tag":"binop","sym":"+","frst":{"tag":"binop","sym":"*","frst":{"tag":"lit","val":"22"},"scnd":{"tag":"lit","val":"3"}},"scnd":{"tag":"lit","val":"3"}}}]}},"alt":{"tag":"blk","body":{"tag":"seq","stmts":[{"tag":"let","sym":"b","expr":{"tag":"lit","val":"43"}}]}}}]}}'
+
+
+fn abc(a){
+    låt a = 4;
+    returnera a;
+}
+
+'{"tag":"blk","body":{"tag":"seq","stmts":[{"tag":"fun","sym":"abc","prms":["a"],"body":{"tag":"blk","body":{"tag":"seq","stmts":[{"tag":"let","sym":"a","expr":{"tag":"lit","val":"4"}},{"tag":"ret","expr":{"tag":"lit","val":"a"}}]}}}]}}'
+
+fn abc(c, d){
+    låt a = 4;
+    returnera a + c + d;
+}
+
+c = abc(3,4);
+
+'{"tag":"blk","body":{"tag":"seq","stmts":[{"tag":"fun","sym":"abc","prms":["c","d"],"body":{"tag":"blk","body":{"tag":"seq","stmts":[{"tag":"let","sym":"a","expr":{"tag":"lit","val":"4"}},{"tag":"ret","expr":{"tag":"binop","sym":"+","frst":{"tag":"binop","sym":"+","frst":{"tag":"lit","val":"a"},"scnd":{"tag":"lit","val":"c"}},"scnd":{"tag":"lit","val":"d"}}}]}}},{"tag":"assmt","sym":"c","expr":{"tag":"app","fun":{"tag":"abc","sym":"is_function"},"args":[{"tag":"lit","val":"3"},{"tag":"lit","val":"4"}]}}]}}'

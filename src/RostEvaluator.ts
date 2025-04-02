@@ -2,7 +2,7 @@ import { BasicEvaluator } from "conductor/dist/conductor/runner";
 import { IRunnerPlugin } from "conductor/dist/conductor/runner/types";
 import { CharStream, CommonTokenStream, AbstractParseTreeVisitor } from 'antlr4ng';
 import { RostLexer } from './parser/grammar/RostLexer';
-import { ProgContext, RostParser , LetStmtContext, ExpressionContext, SequenceContext, AssignmentContext, WhileStmtContext, BreakStatementContext, IfStmtContext, BlockContext, FunDeclContext, ParamListContext, ReturnStatementContext, ContinueStmtContext } from './parser/grammar/RostParser';
+import { ProgContext, RostParser , LetStmtContext, ExpressionContext, SequenceContext, AssignmentContext, WhileStmtContext, BreakStatementContext, IfStmtContext, BlockContext, FunDeclContext, ParamListContext, ReturnStatementContext, ContinueStmtContext, FunctionCallExpressionContext } from './parser/grammar/RostParser';
 import { RostVisitor } from './parser/grammar/RostVisitor';
 import { go } from './RostVM'
 
@@ -51,9 +51,27 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
     }
 
     visitExpression(ctx: ExpressionContext): object {
-
-        if (ctx.getChildCount() === 1) {
-            // Literal case, TODO implement identifiers
+        if (ctx.functionCallExpression() != null){
+            const nctx = ctx.getChild(0) as FunctionCallExpressionContext
+            const fun = {"tag": nctx.IDENTIFIER().getText(), "sym": "is_function"}
+            let argList = []
+            if (nctx.argList() != null){
+                for (let i = 0; i < nctx.argList().expression().length; i++) {
+                    argList.push(this.visit(nctx.argList().expression(i)));
+                }
+            }
+            return {
+                tag: "app",
+                fun: fun,
+                args: argList
+            }
+        }else if (ctx.getChildCount() === 1) {
+            if (ctx.IDENTIFIER() != null){
+                return {
+                    tag: "nam", 
+                    sym: ctx.getText()
+                }
+            }
             return {
                 tag: "lit",
                 val: ctx.getText(),
@@ -161,7 +179,6 @@ export class RostEvaluator extends BasicEvaluator {
             const lexer = new RostLexer(inputStream);
             const tokenStream = new CommonTokenStream(lexer);
             const parser = new RostParser(tokenStream);
-            this.conductor.sendOutput(`first4`);
             // Parse the input
             const tree = parser.prog();
             
