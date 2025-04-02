@@ -19,8 +19,7 @@ block: '{' sequence '}';
 
 sequence: statement*;
 
-// letStmt: 'låt' id=IDENTIFIER ':' type=TYPE '=' expr=expression ';';
-letStmt: 'låt' mutable? id=IDENTIFIER '=' expr=expression ';';
+letStmt: 'låt' id=IDENTIFIER ':' type=TYPE '=' expr=expression ';';
 mutable: 'mut';
 assignment: IDENTIFIER '=' expression ';';
 

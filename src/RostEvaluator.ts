@@ -65,7 +65,12 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
                 args: argList
             }
         }else if (ctx.getChildCount() === 1) {
-            // Literal case, TODO implement identifiers
+            if (ctx.IDENTIFIER() != null){
+                return {
+                    tag: "nam", 
+                    sym: ctx.getText()
+                }
+            }
             return {
                 tag: "lit",
                 val: ctx.getText(),
@@ -103,14 +108,12 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
     }
 
     visitBreakStmt(ctx: BreakStatementContext): object{
-        this.conductor.sendOutput(`In break`)
         return {
             tag: "break"
         }
     }
     
     visitContinueStmt(ctx: ContinueStmtContext) : object{
-        this.conductor.sendOutput(`In cont`)
         return {
             tag: "cont"
         }
