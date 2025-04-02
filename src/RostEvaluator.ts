@@ -4,6 +4,7 @@ import { CharStream, CommonTokenStream, AbstractParseTreeVisitor } from 'antlr4n
 import { RostLexer } from './parser/grammar/RostLexer';
 import { ProgContext, RostParser , LetStmtContext, ExpressionContext, SequenceContext, AssignmentContext, WhileStmtContext, BreakStatementContext, IfStmtContext, BlockContext, FunDeclContext, ParamListContext, ReturnStatementContext, ContinueStmtContext } from './parser/grammar/RostParser';
 import { RostVisitor } from './parser/grammar/RostVisitor';
+import { go } from './RostVM'
 
 class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements RostVisitor<object> {
 
@@ -90,18 +91,17 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
     }
 
     visitBreakStmt(ctx: BreakStatementContext): object{
-        this.conductor.sendOutput(`In break`)
         return {
             tag: "break"
         }
     }
     
     visitContinueStmt(ctx: ContinueStmtContext) : object{
-        this.conductor.sendOutput(`In cont`)
         return {
             tag: "cont"
         }
     }
+
     visitIfStmt(ctx: IfStmtContext): object{
         return {
             tag: "cond", 
@@ -170,6 +170,7 @@ export class RostEvaluator extends BasicEvaluator {
             this.conductor.sendOutput(`JSON tree: ${JSON.stringify(json_program)}`);
 
             // TODO: generate microcode
+            go(json_program);
 
             // TODO run microcode
             
