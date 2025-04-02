@@ -2,7 +2,7 @@ import { BasicEvaluator } from "conductor/dist/conductor/runner";
 import { IRunnerPlugin } from "conductor/dist/conductor/runner/types";
 import { CharStream, CommonTokenStream, AbstractParseTreeVisitor } from 'antlr4ng';
 import { RostLexer } from './parser/grammar/RostLexer';
-import { ProgContext, RostParser , LetStmtContext, ExpressionContext, SequenceContext, AssignmentContext } from './parser/grammar/RostParser';
+import { ProgContext, RostParser , LetStmtContext, ExpressionContext, SequenceContext, AssignmentContext, IfStmtContext, BlockContext } from './parser/grammar/RostParser';
 import { RostVisitor } from './parser/grammar/RostVisitor';
 
 class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements RostVisitor<object> {
@@ -79,6 +79,16 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
               
             }
         }
+    }
+
+    visitIfStmt(ctx: IfStmtContext): object{
+        return {
+            tag: "cond", // dont distinguish stmt and expr
+            pred: this.visit(ctx.expression() as ExpressionContext),
+            cons: this.visit(ctx.block(0) as BlockContext),
+            alt: this.visit(ctx.block(1) as BlockContext)
+        }
+
     }
 
 

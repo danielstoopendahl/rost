@@ -15,11 +15,9 @@ import { ParamListContext } from "./RostParser.js";
 import { ParamContext } from "./RostParser.js";
 import { ReturnStatementContext } from "./RostParser.js";
 import { IfStmtContext } from "./RostParser.js";
-import { ElseBranchContext } from "./RostParser.js";
 import { WhileStmtContext } from "./RostParser.js";
 import { BreakStatementContext } from "./RostParser.js";
 import { ExpressionContext } from "./RostParser.js";
-import { ExpressionStatementContext } from "./RostParser.js";
 import { FunctionCallExpressionContext } from "./RostParser.js";
 import { ArgListContext } from "./RostParser.js";
 
@@ -105,12 +103,6 @@ export class RostVisitor<Result> extends AbstractParseTreeVisitor<Result> {
      */
     visitIfStmt?: (ctx: IfStmtContext) => Result;
     /**
-     * Visit a parse tree produced by `RostParser.elseBranch`.
-     * @param ctx the parse tree
-     * @return the visitor result
-     */
-    visitElseBranch?: (ctx: ElseBranchContext) => Result;
-    /**
      * Visit a parse tree produced by `RostParser.whileStmt`.
      * @param ctx the parse tree
      * @return the visitor result
@@ -128,12 +120,6 @@ export class RostVisitor<Result> extends AbstractParseTreeVisitor<Result> {
      * @return the visitor result
      */
     visitExpression?: (ctx: ExpressionContext) => Result;
-    /**
-     * Visit a parse tree produced by `RostParser.expressionStatement`.
-     * @param ctx the parse tree
-     * @return the visitor result
-     */
-    visitExpressionStatement?: (ctx: ExpressionStatementContext) => Result;
     /**
      * Visit a parse tree produced by `RostParser.functionCallExpression`.
      * @param ctx the parse tree
