@@ -25,13 +25,13 @@ public class RostParser extends Parser {
 		RULE_prog = 0, RULE_statement = 1, RULE_block = 2, RULE_sequence = 3, 
 		RULE_letStmt = 4, RULE_mutable = 5, RULE_assignment = 6, RULE_funDecl = 7, 
 		RULE_paramList = 8, RULE_param = 9, RULE_returnStatement = 10, RULE_ifStmt = 11, 
-		RULE_whileStmt = 12, RULE_breakStatement = 13, RULE_continueStmt = 14, 
-		RULE_expression = 15, RULE_functionCallExpression = 16, RULE_argList = 17;
+		RULE_whileStmt = 12, RULE_breakStmt = 13, RULE_continueStmt = 14, RULE_expression = 15, 
+		RULE_functionCallExpression = 16, RULE_argList = 17;
 	private static String[] makeRuleNames() {
 		return new String[] {
 			"prog", "statement", "block", "sequence", "letStmt", "mutable", "assignment", 
 			"funDecl", "paramList", "param", "returnStatement", "ifStmt", "whileStmt", 
-			"breakStatement", "continueStmt", "expression", "functionCallExpression", 
+			"breakStmt", "continueStmt", "expression", "functionCallExpression", 
 			"argList"
 		};
 	}
@@ -166,8 +166,8 @@ public class RostParser extends Parser {
 		public ContinueStmtContext continueStmt() {
 			return getRuleContext(ContinueStmtContext.class,0);
 		}
-		public BreakStatementContext breakStatement() {
-			return getRuleContext(BreakStatementContext.class,0);
+		public BreakStmtContext breakStmt() {
+			return getRuleContext(BreakStmtContext.class,0);
 		}
 		public StatementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -242,7 +242,7 @@ public class RostParser extends Parser {
 				enterOuterAlt(_localctx, 9);
 				{
 				setState(47);
-				breakStatement();
+				breakStmt();
 				}
 				break;
 			default:
@@ -763,16 +763,16 @@ public class RostParser extends Parser {
 	}
 
 	@SuppressWarnings("CheckReturnValue")
-	public static class BreakStatementContext extends ParserRuleContext {
-		public BreakStatementContext(ParserRuleContext parent, int invokingState) {
+	public static class BreakStmtContext extends ParserRuleContext {
+		public BreakStmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_breakStatement; }
+		@Override public int getRuleIndex() { return RULE_breakStmt; }
 	}
 
-	public final BreakStatementContext breakStatement() throws RecognitionException {
-		BreakStatementContext _localctx = new BreakStatementContext(_ctx, getState());
-		enterRule(_localctx, 26, RULE_breakStatement);
+	public final BreakStmtContext breakStmt() throws RecognitionException {
+		BreakStmtContext _localctx = new BreakStmtContext(_ctx, getState());
+		enterRule(_localctx, 26, RULE_breakStmt);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
