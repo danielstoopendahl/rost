@@ -96,12 +96,18 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
     }
     visitIfStmt(ctx: IfStmtContext): object{
         return {
-            tag: "cond", // dont distinguish stmt and expr
+            tag: "cond", 
             pred: this.visit(ctx.expression() as ExpressionContext),
             cons: this.visit(ctx.block(0) as BlockContext),
             alt: this.visit(ctx.block(1) as BlockContext)
         }
 
+    }
+    visitBlock(ctx: BlockContext): object{
+        return {
+            tag: "blk",
+            body: this.visit(ctx.sequence())
+        }
     }
 
 
