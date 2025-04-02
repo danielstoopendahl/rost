@@ -2,7 +2,7 @@ import { BasicEvaluator } from "conductor/dist/conductor/runner";
 import { IRunnerPlugin } from "conductor/dist/conductor/runner/types";
 import { CharStream, CommonTokenStream, AbstractParseTreeVisitor } from 'antlr4ng';
 import { RostLexer } from './parser/grammar/RostLexer';
-import { ProgContext, RostParser , LetStmtContext, ExpressionContext, SequenceContext, AssignmentContext, WhileStmtContext, BreakStatementContext, IfStmtContext, BlockContext } from './parser/grammar/RostParser';
+import { ProgContext, RostParser , LetStmtContext, ExpressionContext, SequenceContext, AssignmentContext, WhileStmtContext, BreakStatementContext, IfStmtContext, BlockContext, FunDeclContext, ParamListContext } from './parser/grammar/RostParser';
 import { RostVisitor } from './parser/grammar/RostVisitor';
 
 class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements RostVisitor<object> {
@@ -107,6 +107,21 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
         return {
             tag: "blk",
             body: this.visit(ctx.sequence())
+        }
+    }
+
+    visitFunDecl(ctx: FunDeclContext): object {
+        let params = []
+
+         // Iterate through all statement children
+        for (let i = 0; i < ctx.paramList().param().length; i++) {
+            params.push(ctx.paramList().param(i).getText());
+        }
+        return {
+            tag: "fun",
+            sym: ctx.IDENTIFIER().getText(),
+            prms: params,
+            body: this.visit(ctx.block()),
         }
     }
 
