@@ -73,8 +73,13 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
                 }
             }
             // Don't know if this is necessary but without all literals are strings.
-            // This creates a problem that 3 + 3 is interpreted as "3" + "3" and results in "33"
-            
+            // Wihtout this aproblem occurs that 3 + 3 is interpreted as "3" + "3" and results in "33".
+            if (ctx.INT() != null){
+                return {
+                    tag: "lit",
+                    val: parseInt(ctx.getText())
+                }
+            }
             return {
                 tag: "lit",
                 val: ctx.getText()
