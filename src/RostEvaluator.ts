@@ -35,7 +35,6 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
     }
 
     visitLetStmt(ctx: LetStmtContext): object {
-        this.conductor.sendOutput("låt")
         return {
             tag: "let",
             sym: ctx.IDENTIFIER().getText(),
