@@ -2,25 +2,25 @@ import { BasicEvaluator } from "conductor/dist/conductor/runner";
 import { IRunnerPlugin } from "conductor/dist/conductor/runner/types";
 import { CharStream, CommonTokenStream, AbstractParseTreeVisitor } from 'antlr4ng';
 import { RostLexer } from './parser/grammar/RostLexer';
-import { ProgContext, RostParser , LetStmtContext, ExpressionContext, SequenceContext } from './parser/grammar/RostParser';
+import { ProgContext, RostParser , LetStmtContext, ExpressionContext, SequenceContext, AssignmentContext } from './parser/grammar/RostParser';
 import { RostVisitor } from './parser/grammar/RostVisitor';
 
 class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements RostVisitor<object> {
 
     private conductor: IRunnerPlugin
+
     constructor(conductor: IRunnerPlugin) {
         super()
+        // Added this for debugging
         this.conductor = conductor
     }
 
     visitProg(ctx: ProgContext): object {
-        this.conductor.sendOutput(`in prog`);
         return {tag: "blk", body: this.visit(ctx.sequence())};
     }
 
     visitSequence(ctx: SequenceContext): object {
         let stmts = []
-        this.conductor.sendOutput(`in statement`);
 
          // Iterate through all statement children
         for (let i = 0; i < ctx.statement().length; i++) {
@@ -34,19 +34,25 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
     }
 
     visitLetStmt(ctx: LetStmtContext): object {
-        this.conductor.sendOutput(`in let`);
         return {
             tag: "let",
-            id: ctx.IDENTIFIER().getText(),
+            sym: ctx.IDENTIFIER().getText(),
+            expr: this.visit(ctx.expression() as ExpressionContext)
+        }
+    }
+
+    visitAssignment(ctx: AssignmentContext): object {
+        return {
+            tag: "assmt",
+            sym: ctx.IDENTIFIER().getText(),
             expr: this.visit(ctx.expression() as ExpressionContext)
         }
     }
 
     visitExpression(ctx: ExpressionContext): object {
-        this.conductor.sendOutput(`in expression`);
 
         if (ctx.getChildCount() === 1) {
-            // Literal case
+            // Literal case, TODO implement identifiers
             return {
                 tag: "lit",
                 val: ctx.getText(),
