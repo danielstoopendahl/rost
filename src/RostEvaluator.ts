@@ -187,7 +187,8 @@ export class RostEvaluator extends BasicEvaluator {
             this.conductor.sendOutput(`JSON tree: ${JSON.stringify(json_program)}`);
 
             // TODO: generate microcode
-            this.conductor.sendOutput(go(json_program));
+            
+            this.conductor.sendOutput(`Program result ${go(json_program)}`);
 
             // TODO run microcode
             
