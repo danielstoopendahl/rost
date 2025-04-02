@@ -11,7 +11,7 @@ statement
     | assignment
     | returnStatement
     | breakStatement       
-    | expressionStatement
+  //  | expressionStatement
     ;
 
 block: '{' sequence '}';
@@ -30,7 +30,10 @@ param: id=IDENTIFIER ':' type=TYPE;
 returnStatement: 'returnera' expression? ';';
 
 
+// Simplification for now
+ifStmt: 'om' cond=expression cons=block alt=block;
 
+/*
 ifStmt
     : 'om' cond=expression cons=block elseBranch?;
 elseBranch
@@ -38,6 +41,7 @@ elseBranch
     | 'annars' ifStmt
     ;
 
+ */
 
 whileStmt: 'medan' cond=expression block;
 breakStatement: 'bryt' ';';
@@ -55,7 +59,7 @@ expression
     | IDENTIFIER
     ;
 
-expressionStatement: expression ';';
+// Remove for now expressionStatement: expression ';';
 
 functionCallExpression: IDENTIFIER '(' argList? ')';
 argList: expression (',' expression)*;
