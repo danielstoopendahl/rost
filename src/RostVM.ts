@@ -420,5 +420,6 @@ function run() {
 
 export function go(json){
     compile_program(json)
-    return run()
+    const result = run()
+    return result
 }
