@@ -418,8 +418,9 @@ function run() {
     return peek(OS)
 } 
 
-export function go(json){
+export function go(json, conductor){
     compile_program(json)
+    conductor.sendOutput(instrs);
     const result = run()
     return result
 }
