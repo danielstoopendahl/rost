@@ -17,14 +17,12 @@ fn abc(c, d){
 
 c = abc(3,4);
 
-
-
 låt incorrect: i32 = 0;
 
 om test_1() != expected_1{
     incorrect += 1;
 }annars{}
-    
+   
 
 fn test_1(){
     låt a: i32 = 4;
