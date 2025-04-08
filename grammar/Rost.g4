@@ -31,7 +31,7 @@ returnStatement: 'returnera' expression? ';';
 
 
 // Simplification for now
-ifStmt: 'om' cond=expression cons=block alt=block;
+ifStmt: 'om' cond=expression cons=block 'annars' alt=block;
 
 /*
 ifStmt
