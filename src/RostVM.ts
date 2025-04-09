@@ -813,9 +813,9 @@ function run(conductor, heapsize_words) {
     while (!(instrs[PC].tag === 'DONE')) {
         conductor.sendOutput("next instruction: ")
         conductor.sendOutput(`instr: ${instrs[PC].tag}`)
-        conductor.sendOutput(`PC: ${PC}`)
-        print_OS("\noperands:            ", conductor);
-        print_RTS("\nRTS:            ", conductor);
+        // conductor.sendOutput(`PC: ${PC}`)
+        // print_OS("\noperands:            ", conductor);
+        // print_RTS("\nRTS:            ", conductor);
         const instr = instrs[PC++]
         microcode[instr.tag](instr)
     }
