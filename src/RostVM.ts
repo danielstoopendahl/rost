@@ -400,16 +400,16 @@ RESET :
     }
 }
 
-function run() {
+function run(conductor) {
     OS = []
     PC = 0
     E = global_environment
     RTS = []    
     //print_code(instrs)
     while (! (instrs[PC].tag === 'DONE')) {
-        //display("next instruction: ")
-        //print_code([instrs[PC]]) 
-        //display(PC, "PC: ")
+        conductor.sendOutput("next instruction: ")
+        conductor.sendOutput(instrs[PC].tag, "instr: ")
+        conductor.sendOutput(PC, "PC: ")
         //print_OS("\noperands:            ");
         //print_RTS("\nRTS:            ");
         const instr = instrs[PC]
@@ -420,7 +420,7 @@ function run() {
 
 export function go(json, conductor){
     compile_program(json)
-    conductor.sendOutput(instrs);
-    const result = run()
+    conductor.sendOutput(JSON.stringify(instrs));
+    const result = run(conductor)
     return result
 }
