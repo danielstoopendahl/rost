@@ -65,7 +65,7 @@ expression
 
 // Remove for now expressionStatement: expression ';';
 
-functionCallExpression: IDENTIFIER '(' argList? ')';
+functionCallExpression: IDENTIFIER '(' argList? ');';
 argList: expression (',' expression)*;
 
 

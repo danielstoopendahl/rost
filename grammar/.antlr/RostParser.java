@@ -20,7 +20,7 @@ public class RostParser extends Parser {
 		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
 		T__17=18, T__18=19, T__19=20, T__20=21, T__21=22, T__22=23, T__23=24, 
 		T__24=25, T__25=26, T__26=27, T__27=28, T__28=29, T__29=30, T__30=31, 
-		TYPE=32, BOOL=33, INT=34, IDENTIFIER=35, WS=36;
+		T__31=32, TYPE=33, BOOL=34, INT=35, IDENTIFIER=36, WS=37;
 	public static final int
 		RULE_prog = 0, RULE_statement = 1, RULE_block = 2, RULE_sequence = 3, 
 		RULE_letStmt = 4, RULE_mutable = 5, RULE_assignment = 6, RULE_funDecl = 7, 
@@ -42,7 +42,7 @@ public class RostParser extends Parser {
 			null, "'{'", "'}'", "'l\\u00E5t'", "':'", "'='", "';'", "'mut'", "'fn'", 
 			"'('", "')'", "'->'", "','", "'returnera'", "'om'", "'annars'", "'medan'", 
 			"'bryt'", "'forts\\u00E4tt'", "'*'", "'/'", "'+'", "'-'", "'&&'", "'||'", 
-			"'=='", "'!='", "'<='", "'>='", "'<'", "'>'", "'!'"
+			"'=='", "'!='", "'<='", "'>='", "'<'", "'>'", "'!'", "');'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
@@ -50,8 +50,8 @@ public class RostParser extends Parser {
 		return new String[] {
 			null, null, null, null, null, null, null, null, null, null, null, null, 
 			null, null, null, null, null, null, null, null, null, null, null, null, 
-			null, null, null, null, null, null, null, null, "TYPE", "BOOL", "INT", 
-			"IDENTIFIER", "WS"
+			null, null, null, null, null, null, null, null, null, "TYPE", "BOOL", 
+			"INT", "IDENTIFIER", "WS"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -320,7 +320,7 @@ public class RostParser extends Parser {
 			setState(57);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 34360221962L) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 68719960330L) != 0)) {
 				{
 				{
 				setState(54);
@@ -1057,7 +1057,7 @@ public class RostParser extends Parser {
 			setState(156);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 62281220608L) != 0)) {
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 122410762752L) != 0)) {
 				{
 				setState(155);
 				argList();
@@ -1065,7 +1065,7 @@ public class RostParser extends Parser {
 			}
 
 			setState(158);
-			match(T__9);
+			match(T__31);
 			}
 		}
 		catch (RecognitionException re) {
@@ -1153,7 +1153,7 @@ public class RostParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001$\u00a9\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
+		"\u0004\u0001%\u00a9\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
 		"\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004\u0002"+
 		"\u0005\u0007\u0005\u0002\u0006\u0007\u0006\u0002\u0007\u0007\u0007\u0002"+
 		"\b\u0007\b\u0002\t\u0007\t\u0002\n\u0007\n\u0002\u000b\u0007\u000b\u0002"+
@@ -1204,21 +1204,21 @@ public class RostParser extends Parser {
 		"\u0000\u0000\u00009:\u0001\u0000\u0000\u0000:\u0007\u0001\u0000\u0000"+
 		"\u0000;9\u0001\u0000\u0000\u0000<>\u0005\u0003\u0000\u0000=?\u0003\n\u0005"+
 		"\u0000>=\u0001\u0000\u0000\u0000>?\u0001\u0000\u0000\u0000?@\u0001\u0000"+
-		"\u0000\u0000@A\u0005#\u0000\u0000AB\u0005\u0004\u0000\u0000BC\u0005 \u0000"+
+		"\u0000\u0000@A\u0005$\u0000\u0000AB\u0005\u0004\u0000\u0000BC\u0005!\u0000"+
 		"\u0000CD\u0005\u0005\u0000\u0000DE\u0003\u001e\u000f\u0000EF\u0005\u0006"+
 		"\u0000\u0000F\t\u0001\u0000\u0000\u0000GH\u0005\u0007\u0000\u0000H\u000b"+
-		"\u0001\u0000\u0000\u0000IJ\u0005#\u0000\u0000JK\u0005\u0005\u0000\u0000"+
+		"\u0001\u0000\u0000\u0000IJ\u0005$\u0000\u0000JK\u0005\u0005\u0000\u0000"+
 		"KL\u0003\u001e\u000f\u0000LM\u0005\u0006\u0000\u0000M\r\u0001\u0000\u0000"+
-		"\u0000NO\u0005\b\u0000\u0000OP\u0005#\u0000\u0000PR\u0005\t\u0000\u0000"+
+		"\u0000NO\u0005\b\u0000\u0000OP\u0005$\u0000\u0000PR\u0005\t\u0000\u0000"+
 		"QS\u0003\u0010\b\u0000RQ\u0001\u0000\u0000\u0000RS\u0001\u0000\u0000\u0000"+
 		"ST\u0001\u0000\u0000\u0000TW\u0005\n\u0000\u0000UV\u0005\u000b\u0000\u0000"+
-		"VX\u0005 \u0000\u0000WU\u0001\u0000\u0000\u0000WX\u0001\u0000\u0000\u0000"+
+		"VX\u0005!\u0000\u0000WU\u0001\u0000\u0000\u0000WX\u0001\u0000\u0000\u0000"+
 		"XY\u0001\u0000\u0000\u0000YZ\u0003\u0004\u0002\u0000Z\u000f\u0001\u0000"+
 		"\u0000\u0000[`\u0003\u0012\t\u0000\\]\u0005\f\u0000\u0000]_\u0003\u0012"+
 		"\t\u0000^\\\u0001\u0000\u0000\u0000_b\u0001\u0000\u0000\u0000`^\u0001"+
 		"\u0000\u0000\u0000`a\u0001\u0000\u0000\u0000a\u0011\u0001\u0000\u0000"+
-		"\u0000b`\u0001\u0000\u0000\u0000cd\u0005#\u0000\u0000de\u0005\u0004\u0000"+
-		"\u0000ef\u0005 \u0000\u0000f\u0013\u0001\u0000\u0000\u0000gh\u0005\r\u0000"+
+		"\u0000b`\u0001\u0000\u0000\u0000cd\u0005$\u0000\u0000de\u0005\u0004\u0000"+
+		"\u0000ef\u0005!\u0000\u0000f\u0013\u0001\u0000\u0000\u0000gh\u0005\r\u0000"+
 		"\u0000hi\u0003\u001e\u000f\u0000ij\u0005\u0006\u0000\u0000j\u0015\u0001"+
 		"\u0000\u0000\u0000kl\u0005\u000e\u0000\u0000lm\u0003\u001e\u000f\u0000"+
 		"mn\u0003\u0004\u0002\u0000no\u0005\u000f\u0000\u0000op\u0003\u0004\u0002"+
@@ -1230,8 +1230,8 @@ public class RostParser extends Parser {
 		"\t\u0000\u0000}~\u0003\u001e\u000f\u0000~\u007f\u0005\n\u0000\u0000\u007f"+
 		"\u0087\u0001\u0000\u0000\u0000\u0080\u0081\u0007\u0000\u0000\u0000\u0081"+
 		"\u0087\u0003\u001e\u000f\u0005\u0082\u0087\u0003 \u0010\u0000\u0083\u0087"+
-		"\u0005\"\u0000\u0000\u0084\u0087\u0005!\u0000\u0000\u0085\u0087\u0005"+
-		"#\u0000\u0000\u0086{\u0001\u0000\u0000\u0000\u0086\u0080\u0001\u0000\u0000"+
+		"\u0005#\u0000\u0000\u0084\u0087\u0005\"\u0000\u0000\u0085\u0087\u0005"+
+		"$\u0000\u0000\u0086{\u0001\u0000\u0000\u0000\u0086\u0080\u0001\u0000\u0000"+
 		"\u0000\u0086\u0082\u0001\u0000\u0000\u0000\u0086\u0083\u0001\u0000\u0000"+
 		"\u0000\u0086\u0084\u0001\u0000\u0000\u0000\u0086\u0085\u0001\u0000\u0000"+
 		"\u0000\u0087\u0096\u0001\u0000\u0000\u0000\u0088\u0089\n\t\u0000\u0000"+
@@ -1244,10 +1244,10 @@ public class RostParser extends Parser {
 		"\u0000\u0000\u0094\u008e\u0001\u0000\u0000\u0000\u0094\u0091\u0001\u0000"+
 		"\u0000\u0000\u0095\u0098\u0001\u0000\u0000\u0000\u0096\u0094\u0001\u0000"+
 		"\u0000\u0000\u0096\u0097\u0001\u0000\u0000\u0000\u0097\u001f\u0001\u0000"+
-		"\u0000\u0000\u0098\u0096\u0001\u0000\u0000\u0000\u0099\u009a\u0005#\u0000"+
+		"\u0000\u0000\u0098\u0096\u0001\u0000\u0000\u0000\u0099\u009a\u0005$\u0000"+
 		"\u0000\u009a\u009c\u0005\t\u0000\u0000\u009b\u009d\u0003\"\u0011\u0000"+
 		"\u009c\u009b\u0001\u0000\u0000\u0000\u009c\u009d\u0001\u0000\u0000\u0000"+
-		"\u009d\u009e\u0001\u0000\u0000\u0000\u009e\u009f\u0005\n\u0000\u0000\u009f"+
+		"\u009d\u009e\u0001\u0000\u0000\u0000\u009e\u009f\u0005 \u0000\u0000\u009f"+
 		"!\u0001\u0000\u0000\u0000\u00a0\u00a5\u0003\u001e\u000f\u0000\u00a1\u00a2"+
 		"\u0005\f\u0000\u0000\u00a2\u00a4\u0003\u001e\u000f\u0000\u00a3\u00a1\u0001"+
 		"\u0000\u0000\u0000\u00a4\u00a7\u0001\u0000\u0000\u0000\u00a5\u00a3\u0001"+
