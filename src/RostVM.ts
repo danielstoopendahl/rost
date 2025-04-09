@@ -210,8 +210,6 @@ const Environment_tag    = 10 // 0000 1010
 // true, false, undefined, null, and unassigned
 // and make sure no such values are created at runtime
 
-// boolean values carry their value (0 for false, 1 for true)
-// in the byte following the tag
 
 let False
 const is_False = address => 
@@ -234,6 +232,14 @@ const is_Unassigned = address =>
 let Undefined
 const is_Undefined = address =>
     heap_get_tag(address) === Undefined_tag
+
+const allocate_literal_values = () => {
+    False = heap_allocate(False_tag, 1)
+    True = heap_allocate(True_tag, 1)
+    Null = heap_allocate(Null_tag, 1)
+    Unassigned = heap_allocate(Unassigned_tag, 1)
+    Undefined = heap_allocate(Undefined_tag, 1)
+}
 
 // closure
 // [1 byte tag, 1 byte arity, 2 bytes pc, 1 byte unused, 
@@ -797,6 +803,7 @@ function initialize_machine(heapsize_words) {
     heap_set(i - node_size, -1)
     free = 0
     PC = 0
+    allocate_literal_values()
     E = heap_allocate_Environment(0)
 }
 
@@ -833,7 +840,7 @@ const print_OS = (x, conductor) => {
     conductor.sendOutput(x)
     for (let i = 0; i < OS.length; i = i + 1) {
         const val = OS[i]
-        conductor.sendOutput(`${JSON.stringify(i)} :
+        conductor.sendOutput(`${i} :
                     ${address_to_JS_value(val)}
                    `)
     }
