@@ -27,7 +27,9 @@ assignment: IDENTIFIER '=' expression ';';
 funDecl: 'fn' id=IDENTIFIER '(' paramList? ')'  ('->' type=TYPE)? body=block;
 paramList: param (',' param)*;
 param: id=IDENTIFIER ':' type=TYPE;
-returnStatement: 'returnera' expression? ';';
+
+// Not optional expression
+returnStatement: 'returnera' expression ';';
 
 
 // Simplification for now
