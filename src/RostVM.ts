@@ -805,8 +805,8 @@ function run(conductor, heapsize_words) {
     //print_code(instrs)
     while (!(instrs[PC].tag === 'DONE')) {
         conductor.sendOutput("next instruction: ")
-        conductor.sendOutput(instrs[PC].tag, "instr: ")
-        conductor.sendOutput(PC, "PC: ")
+        conductor.sendOutput(`instr: ${instrs[PC].tag}`)
+        conductor.sendOutput(`PC: ${PC}`)
         print_OS("\noperands:            ", conductor);
         print_RTS("\nRTS:            ", conductor);
         const instr = instrs[PC++]
@@ -825,16 +825,16 @@ export function go(json, heapsize_words, conductor) {
 const print_RTS = (x, conductor) => {
     for (let i = 0; i < RTS.length; i = i + 1) {
         const f = RTS[i]
-        conductor.sendOutput("", i + ": " + JSON.stringify(f))
+        conductor.sendOutput(`${i} : ${JSON.stringify(f)}`)
     }
 }
 
 const print_OS = (x, conductor) => {
-    conductor.sendOutput("", x)
+    conductor.sendOutput(x)
     for (let i = 0; i < OS.length; i = i + 1) {
         const val = OS[i]
-        conductor.sendOutput("", JSON.stringify(i) + ": " +
-                    address_to_JS_value(val) 
-                    )
+        conductor.sendOutput(`${JSON.stringify(i)} :
+                    ${address_to_JS_value(val)}
+                   `)
     }
 }
