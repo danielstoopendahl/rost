@@ -12,7 +12,7 @@ statement
     | returnStatement
     | continueStmt
     | breakStmt     
-  //  | expressionStatement
+    | expressionStatement
     ;
 
 block: '{' sequence '}';
@@ -63,9 +63,9 @@ expression
     | IDENTIFIER
     ;
 
-// Remove for now expressionStatement: expression ';';
+expressionStatement: expression ';';
 
-functionCallExpression: IDENTIFIER '(' argList? ');';
+functionCallExpression: IDENTIFIER '(' argList? ')';
 argList: expression (',' expression)*;
 
 
