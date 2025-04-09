@@ -809,7 +809,7 @@ function run(conductor, heapsize_words) {
         conductor.sendOutput(PC, "PC: ")
         print_OS("\noperands:            ", conductor);
         print_RTS("\nRTS:            ", conductor);
-        const instr = instrs[PC]
+        const instr = instrs[PC++]
         microcode[instr.tag](instr)
     }
     return address_to_JS_value(peek(OS, 0))
@@ -825,7 +825,7 @@ export function go(json, heapsize_words, conductor) {
 const print_RTS = (x, conductor) => {
     for (let i = 0; i < RTS.length; i = i + 1) {
         const f = RTS[i]
-        conductor.sendOutput("", JSON.stringify(i) + ": " + f)
+        conductor.sendOutput("", i + ": " + JSON.stringify(f))
     }
 }
 
