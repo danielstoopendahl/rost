@@ -724,7 +724,7 @@ ENTER_SCOPE:
     const frame_address = heap_allocate_Frame(instr.num)
     E = heap_Environment_extend(frame_address, E)
     for (let i = 0; i < instr.num; i++) {
-    heap_set_child(frame_address, i, Unassigned)
+        heap_set_child(frame_address, i, Unassigned)
     }
     },
 EXIT_SCOPE:
@@ -807,8 +807,8 @@ function run(conductor, heapsize_words) {
         conductor.sendOutput("next instruction: ")
         conductor.sendOutput(instrs[PC].tag, "instr: ")
         conductor.sendOutput(PC, "PC: ")
-        //print_OS("\noperands:            ");
-        //print_RTS("\nRTS:            ");
+        print_OS("\noperands:            ", conductor);
+        print_RTS("\nRTS:            ", conductor);
         const instr = instrs[PC]
         microcode[instr.tag](instr)
     }
@@ -820,4 +820,21 @@ export function go(json, heapsize_words, conductor) {
     conductor.sendOutput(JSON.stringify(instrs));
     const result = run(conductor, heapsize_words)
     return result
+}
+
+const print_RTS = (x, conductor) => {
+    for (let i = 0; i < RTS.length; i = i + 1) {
+        const f = RTS[i]
+        conductor.sendOutput("", JSON.stringify(i) + ": " + f)
+    }
+}
+
+const print_OS = (x, conductor) => {
+    conductor.sendOutput("", x)
+    for (let i = 0; i < OS.length; i = i + 1) {
+        const val = OS[i]
+        conductor.sendOutput("", JSON.stringify(i) + ": " +
+                    address_to_JS_value(val) 
+                    )
+    }
 }
