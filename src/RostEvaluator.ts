@@ -144,13 +144,13 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
 
     }
 
-    // visitExpressionStatement(ctx: ExpressionStatementContext): object{
-    //     return {
-    //         tag: "expr_stmt",
-    //         expr: ctx.expression()
-    //     }
+    visitExpressionStatement(ctx: ExpressionStatementContext): object{
+        return {
+            tag: "expr_stmt",
+            expr: this.visit(ctx.expression() as ExpressionContext)
+        }
 
-    // }
+    }
     visitBlock(ctx: BlockContext): object{
         return {
             tag: "blk",
