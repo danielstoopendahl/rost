@@ -16,9 +16,10 @@ import { ParamContext } from "./RostParser.js";
 import { ReturnStatementContext } from "./RostParser.js";
 import { IfStmtContext } from "./RostParser.js";
 import { WhileStmtContext } from "./RostParser.js";
-import { BreakStatementContext } from "./RostParser.js";
+import { BreakStmtContext } from "./RostParser.js";
 import { ContinueStmtContext } from "./RostParser.js";
 import { ExpressionContext } from "./RostParser.js";
+import { ExpressionStatementContext } from "./RostParser.js";
 import { FunctionCallExpressionContext } from "./RostParser.js";
 import { ArgListContext } from "./RostParser.js";
 
@@ -159,15 +160,15 @@ export class RostListener implements ParseTreeListener {
      */
     exitWhileStmt?: (ctx: WhileStmtContext) => void;
     /**
-     * Enter a parse tree produced by `RostParser.breakStatement`.
+     * Enter a parse tree produced by `RostParser.breakStmt`.
      * @param ctx the parse tree
      */
-    enterBreakStatement?: (ctx: BreakStatementContext) => void;
+    enterBreakStmt?: (ctx: BreakStmtContext) => void;
     /**
-     * Exit a parse tree produced by `RostParser.breakStatement`.
+     * Exit a parse tree produced by `RostParser.breakStmt`.
      * @param ctx the parse tree
      */
-    exitBreakStatement?: (ctx: BreakStatementContext) => void;
+    exitBreakStmt?: (ctx: BreakStmtContext) => void;
     /**
      * Enter a parse tree produced by `RostParser.continueStmt`.
      * @param ctx the parse tree
@@ -188,6 +189,16 @@ export class RostListener implements ParseTreeListener {
      * @param ctx the parse tree
      */
     exitExpression?: (ctx: ExpressionContext) => void;
+    /**
+     * Enter a parse tree produced by `RostParser.expressionStatement`.
+     * @param ctx the parse tree
+     */
+    enterExpressionStatement?: (ctx: ExpressionStatementContext) => void;
+    /**
+     * Exit a parse tree produced by `RostParser.expressionStatement`.
+     * @param ctx the parse tree
+     */
+    exitExpressionStatement?: (ctx: ExpressionStatementContext) => void;
     /**
      * Enter a parse tree produced by `RostParser.functionCallExpression`.
      * @param ctx the parse tree

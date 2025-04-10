@@ -635,6 +635,10 @@ fun:
                     prms: comp.prms, 
                     body: comp.body}},
 	        ce)
+    },
+expr_stmt:
+    (comp, ce) => {
+        compile(comp.expr, ce)
     }
 }
 

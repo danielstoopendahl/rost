@@ -2,7 +2,7 @@ import { BasicEvaluator } from "conductor/dist/conductor/runner";
 import { IRunnerPlugin } from "conductor/dist/conductor/runner/types";
 import { CharStream, CommonTokenStream, AbstractParseTreeVisitor } from 'antlr4ng';
 import { RostLexer } from './parser/grammar/RostLexer';
-import { ProgContext, RostParser , LetStmtContext, ExpressionContext, SequenceContext, AssignmentContext, WhileStmtContext, BreakStatementContext, IfStmtContext, BlockContext, FunDeclContext, ParamListContext, ReturnStatementContext, ContinueStmtContext, FunctionCallExpressionContext } from './parser/grammar/RostParser';
+import { ProgContext, RostParser , LetStmtContext, ExpressionContext, SequenceContext, AssignmentContext, WhileStmtContext, BreakStatementContext, IfStmtContext, BlockContext, FunDeclContext, ParamListContext, ReturnStatementContext, ContinueStmtContext, FunctionCallExpressionContext, ExpressionStatementContext } from './parser/grammar/RostParser';
 import { RostVisitor } from './parser/grammar/RostVisitor';
 import { go } from './RostVM'
 
@@ -140,6 +140,14 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
             pred: this.visit(ctx.expression() as ExpressionContext),
             cons: this.visit(ctx.block(0) as BlockContext),
             alt: this.visit(ctx.block(1) as BlockContext)
+        }
+
+    }
+
+    visitExpressionStatement(ctx: ExpressionStatementContext): object{
+        return {
+            tag: "expr_stmt",
+            expr: ctx.expression()
         }
 
     }
