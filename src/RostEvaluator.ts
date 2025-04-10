@@ -162,8 +162,10 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
         let params = []
 
          // Iterate through all statement children
-        for (let i = 0; i < ctx.paramList().param().length; i++) {
-            params.push(ctx.paramList().param(i).getText());
+        if (ctx.paramList() !== null){
+            for (let i = 0; i < ctx.paramList().param().length; i++) {
+                params.push(ctx.paramList().param(i).getText());
+            }
         }
         return {
             tag: "fun",
