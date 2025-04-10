@@ -53,7 +53,7 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
     visitExpression(ctx: ExpressionContext): object {
         if (ctx.functionCallExpression() != null){
             const nctx = ctx.getChild(0) as FunctionCallExpressionContext
-            const fun = {"tag": nctx.IDENTIFIER().getText(), "sym": "is_function"}
+            const fun = {"tag": "nam", "sym": nctx.IDENTIFIER().getText()}
             let argList = []
             if (nctx.argList() != null){
                 for (let i = 0; i < nctx.argList().expression().length; i++) {
