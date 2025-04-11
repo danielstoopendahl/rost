@@ -72,6 +72,6 @@ argList: expression (',' expression)*;
 TYPE: 'bool' | 'i32';
 BOOL: 'sant' | 'falskt';
 INT: [0-9]+;
-IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]*;
+IDENTIFIER: [a-zA-Z_åäöÅÄÖ][a-zA-Z0-9_åäöÅÄÖ]*;
 WS: [ \t\r\n]+ -> skip;
 
