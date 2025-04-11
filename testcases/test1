@@ -5,17 +5,12 @@ om (sant){
 }
 
 
-fn abc(a){
-    låt a = 4;
+fn abc(a: i32){
+    låt b: i32 = 4;
     returnera a;
 }
+abc(3);
 
-fn abc(c, d){
-    låt a = 4;
-    returnera a + c + d;
-}
-
-c = abc(3,4);
 
 låt incorrect: i32 = 0;
 
