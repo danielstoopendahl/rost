@@ -24,7 +24,7 @@ mutable: 'mut';
 assignment: IDENTIFIER '=' expression ';';
 
 
-funDecl: 'fn' id=IDENTIFIER '(' paramList? ')'  ('->' type=TYPE)? body=block;
+funDecl: 'fn' id=IDENTIFIER '(' paramList? ')' '->' type=TYPE body=block;
 paramList: param (',' param)*;
 param: id=IDENTIFIER ':' type=TYPE;
 
