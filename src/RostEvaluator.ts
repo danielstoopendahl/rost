@@ -4,7 +4,8 @@ import { CharStream, CommonTokenStream, AbstractParseTreeVisitor } from 'antlr4n
 import { RostLexer } from './parser/grammar/RostLexer';
 import { ProgContext, RostParser , LetStmtContext, ExpressionContext, SequenceContext, AssignmentContext, WhileStmtContext, BreakStmtContext, IfStmtContext, BlockContext, FunDeclContext, ParamListContext, ReturnStatementContext, ContinueStmtContext, FunctionCallExpressionContext, ExpressionStatementContext } from './parser/grammar/RostParser';
 import { RostVisitor } from './parser/grammar/RostVisitor';
-import { go } from './RostVM'
+import { go } from './RostVM';
+import { check_type } from './TypeChecker';
 
 class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements RostVisitor<object> {
 
@@ -209,6 +210,9 @@ export class RostEvaluator extends BasicEvaluator {
             // Create JSON parse tree
             const json_program = this.visitor.visit(tree);
             this.conductor.sendOutput(`JSON tree: ${JSON.stringify(json_program)}`);
+
+            const program_type = check_type(json_program)
+            this.conductor.sendOutput(`Program type: ${program_type}`)
             
             this.conductor.sendOutput(`${go(json_program, 400, this.conductor)}`);
 
