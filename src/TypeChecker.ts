@@ -130,15 +130,7 @@ cond:
                   unparse_type(t0))
         const t1 = type(comp.cons, te)
         const t2 = type(comp.alt, te)
-        if (equal_type(t1, t2)) {
-            return t1
-        } else {
-            error("types of branches not matching; " +
-                  "consequent type: " + 
-                  unparse_type(t1) + ", " +
-                  "alternative type: " + 
-                  unparse_type(t2))
-        }
+        return "undefined"
     },
 
 while:
@@ -150,9 +142,7 @@ while:
                   unparse_type(t0))
         }
         
-        console.log(comp.body)
         type(comp.body, te)
-        console.log("heuwhile")
         return "undefined"
     },
 fun:
@@ -267,15 +257,8 @@ cond:
                   unparse_type(t0))
         const t1 = type_fun_body(comp.cons, te)
         const t2 = type_fun_body(comp.alt, te)
-        if (equal_type(t1, t2)) {
-            return t1
-        } else {
-            error("types of branches not matching; " +
-                  "consequent type: " + 
-                  unparse_type(t1) + ", " +
-                  "alternative type: " + 
-                  unparse_type(t2))
-        }
+        return "undefined"
+
     },
 seq: 
     (comp, te) => {
