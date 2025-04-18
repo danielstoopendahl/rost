@@ -1,45 +1,3 @@
-// Typed Source abuses multiplications
-// to denote lists of argument types
-// example: number * number > bool
-// is the type of a function that takes
-// two number arguments and returns a bool
-const transform_types = t => 
-    t.tag === 'binop' && t.sym === '*'
-    ? [...transform_types(t.frst),
-       ...transform_types(t.scnd)]
-    : [transform_type(t)]
-
-// the token null is used to denote an 
-// empty list of argument types
-// example: null > number
-// is the type of a nullary function
-// that returns a number
-const transform_types_or_null = t =>
-    (t.tag === 'lit' && t.val === null)
-    ? []
-    : transform_types(t)
-
-// transform_type takes a Source expression
-// and returns the corresponding type
-// Example: 
-// transform_type(ast_to_json(parse(
-//.   "number * number > bool;")));
-// returns
-// {"tag": "fun", 
-//  "args": ["number", "number"], 
-//  "res": "bool"}
-const transform_type = t =>
-    t.tag === 'nam' &&
-    (t.sym === 'number' ||
-     t.sym === 'bool' ||
-     t.sym === 'undefined')
-    ? t.sym
-    : t.tag === 'binop' && t.sym === '>'
-    ? {tag:'fun',
-       args: transform_types_or_null(t.frst),
-       res: transform_type(t.scnd)}
-    : Error('illegal type expression')
-
 // turn a given type into a string
 // Example:
 // unparse_type({"tag": "fun", 
@@ -57,7 +15,7 @@ const unparse_type = t =>
     typeof t == "string"
     ? t 
     : // t is function type
-     "(" + unparse_types(t.args) + " > " + 
+     "(" + unparse_types(t.args) + " -> " + 
      unparse_type(t.res) + ")"
 
 const equal_types = (ts1, ts2) =>
@@ -186,7 +144,7 @@ fun:
                          comp.type.args,
                          te)
         const body_type = type_fun_body(comp.body, extended_te)
-        if (equal_type(body_type, comp.type)) {
+        if (equal_type(body_type, comp.type.res)) {
             return "undefined"
         } else {
             Error("type Error in function declaration; " +

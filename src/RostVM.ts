@@ -815,8 +815,8 @@ function run(conductor, heapsize_words) {
     initialize_machine(heapsize_words)
     //print_code(instrs)
     while (!(instrs[PC].tag === 'DONE')) {
-        conductor.sendOutput("next instruction: ")
-        conductor.sendOutput(`instr: ${instrs[PC].tag}`)
+        // conductor.sendOutput("next instruction: ")
+        // conductor.sendOutput(`instr: ${instrs[PC].tag}`)
         // conductor.sendOutput(`PC: ${PC}`)
         // print_OS("\noperands:            ", conductor);
         // print_RTS("\nRTS:            ", conductor);

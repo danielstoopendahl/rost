@@ -162,17 +162,22 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
 
     visitFunDecl(ctx: FunDeclContext): object {
         let params = []
+        let funType = {
+            res: ctx.TYPE().getText(),
+            args: []
+        }
 
          // Iterate through all statement children
         if (ctx.paramList() !== null){
             for (let i = 0; i < ctx.paramList().param().length; i++) {
                 params.push(ctx.paramList().param(i).IDENTIFIER().getText());
+                funType.args.push(ctx.paramList().param(i).TYPE().getText());
             }
         }
         return {
             tag: "fun",
             sym: ctx.IDENTIFIER().getText(),
-            type: ctx.TYPE().getText(),
+            type: funType,
             prms: params,
             body: this.visit(ctx.block()),
         }
@@ -223,9 +228,9 @@ export class RostEvaluator extends BasicEvaluator {
         }  catch (error) {
             // Handle errors and send them to the REPL
             if (error instanceof Error) {
-                this.conductor.sendOutput(`Error1: ${error.message}`);
+                this.conductor.sendOutput(`Error: ${error.message}`);
             } else {
-                this.conductor.sendOutput(`Error2: ${String(error)}`);
+                this.conductor.sendOutput(`Error: ${String(error)}`);
             }
         }
     }
