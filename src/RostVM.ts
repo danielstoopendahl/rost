@@ -811,40 +811,40 @@ function initialize_machine(heapsize_words) {
     E = heap_allocate_Environment(0)
 }
 
-function run(conductor, heapsize_words) {
+function run(heapsize_words) {
     initialize_machine(heapsize_words)
     //print_code(instrs)
     while (!(instrs[PC].tag === 'DONE')) {
-        // conductor.sendOutput("next instruction: ")
-        // conductor.sendOutput(`instr: ${instrs[PC].tag}`)
-        // conductor.sendOutput(`PC: ${PC}`)
-        // print_OS("\noperands:            ", conductor);
-        // print_RTS("\nRTS:            ", conductor);
+        // console.log("next instruction: ")
+        // console.log(`instr: ${instrs[PC].tag}`)
+        // console.log(`PC: ${PC}`)
+        // print_OS("\noperands:            ");
+        // print_RTS("\nRTS:            ");
         const instr = instrs[PC++]
         microcode[instr.tag](instr)
     }
     return address_to_JS_value(peek(OS, 0))
 }
 
-export function go(json, heapsize_words, conductor) {
+export function go(json, heapsize_words) {
     compile_program(json)
-    conductor.sendOutput(JSON.stringify(instrs));
-    const result = run(conductor, heapsize_words)
+    console.log(JSON.stringify(instrs));
+    const result = run(heapsize_words)
     return result
 }
 
-const print_RTS = (x, conductor) => {
+const print_RTS = (x) => {
     for (let i = 0; i < RTS.length; i = i + 1) {
         const f = RTS[i]
-        conductor.sendOutput(`${i} : ${JSON.stringify(f)}`)
+        console.log(`${i} : ${JSON.stringify(f)}`)
     }
 }
 
-const print_OS = (x, conductor) => {
-    conductor.sendOutput(x)
+const print_OS = (x) => {
+    console.log(x)
     for (let i = 0; i < OS.length; i = i + 1) {
         const val = OS[i]
-        conductor.sendOutput(`${i} :
+        console.log(`${i} :
                     ${address_to_JS_value(val)}
                    `)
     }

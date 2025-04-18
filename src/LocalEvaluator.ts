@@ -1,3 +1,4 @@
+import * as fs from 'fs';
 import { BasicEvaluator } from "conductor/dist/conductor/runner";
 import { IRunnerPlugin } from "conductor/dist/conductor/runner/types";
 import { CharStream, CommonTokenStream } from 'antlr4ng';
@@ -8,20 +9,14 @@ import { check_type } from './TypeChecker';
 import { RostJSONBuilder } from "./TreeBuilder";
 
 
-export class RostEvaluator extends BasicEvaluator {
-    private executionCount: number;
-    private visitor: RostJSONBuilder;
+export class RostEvaluator{
+    private visitor: RostJSONBuilder = new RostJSONBuilder();
 
-    constructor(conductor: IRunnerPlugin) {
-        super(conductor);
-        this.executionCount = 0;
-        this.visitor = new RostJSONBuilder();
-    }
-
-    async evaluateChunk(chunk: string): Promise<void> {
-        this.executionCount++;
+    evaluate() {
         try {
             // Create the lexer and parser
+            const chunk = fs.readFileSync(0, 'utf-8'); // 0 refers to stdin
+
             const inputStream = CharStream.fromString(chunk);
             const lexer = new RostLexer(inputStream);
             const tokenStream = new CommonTokenStream(lexer);
@@ -31,22 +26,20 @@ export class RostEvaluator extends BasicEvaluator {
             
             // Create JSON parse tree
             const json_program = this.visitor.visit(tree);
-            this.conductor.sendOutput(`JSON tree: ${JSON.stringify(json_program)}`);
+            console.log(`JSON tree: ${JSON.stringify(json_program)}`);
 
             const program_type = check_type(json_program)
-            this.conductor.sendOutput(`Program type: ${program_type}`)
+            console.log(`Program type: ${program_type}`)
             
-            this.conductor.sendOutput(`${go(json_program, 400)}`);
+            console.log(`${go(json_program, 400)}`);
 
             
-            // Send the result to the REPL
-            //this.conductor.sendOutput(`Result of expression: ${result}`);
         }  catch (error) {
             // Handle errors and send them to the REPL
             if (error instanceof Error) {
-                this.conductor.sendOutput(`Error: ${error.message}`);
+                console.log(`Error: ${error.message}`);
             } else {
-                this.conductor.sendOutput(`Error: ${String(error)}`);
+                console.log(`Error: ${String(error)}`);
             }
         }
     }
