@@ -542,12 +542,15 @@ cond:
         const jump_on_false_instruction = {tag: 'JOF', addr:-1}
         instrs[wc++] = jump_on_false_instruction
         compile(comp.cons, ce)
+        instrs[wc++] = { tag: 'POP' }; // Discard the value of the 'cons' branch
         const goto_instruction = { tag: 'GOTO', addr:-1}
         instrs[wc++] = goto_instruction;
         const alternative_address = wc;
         jump_on_false_instruction.addr = alternative_address;
         compile(comp.alt, ce)
+        instrs[wc++] = { tag: 'POP' }; // Discard the value of the 'alt' branch
         goto_instruction.addr = wc
+        instrs[wc++] = { tag: 'LDC', val: undefined }; // Push undefined as the result
     },
 while:
     (comp, ce) => {

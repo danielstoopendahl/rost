@@ -13,11 +13,12 @@ medan (kör){
      om (räknare > 10){
         kör = falskt;
      }annars{
-         kör = sant;
+        
      }
 }
 
 räknare;
+
 `
 
 evaluate(program)
