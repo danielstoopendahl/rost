@@ -36,15 +36,15 @@ const error = (msg: string) => {
 // Type frames are JavaScript objects that map 
 // symbols (strings) to types.
 const unary_arith_type =
-    { tag: "fun", args: ["number"], 
-      res: "number" }
+    { tag: "fun", args: ["i32"], 
+      res: "i32" }
     
 const binary_arith_type =
-    { tag: "fun", args: ["number", "number"], 
-      res: "number" }
+    { tag: "fun", args: ["i32", "i32"], 
+      res: "i32" }
 
 const number_comparison_type =
-    { tag: "fun", args: ["number", "number"], 
+    { tag: "fun", args: ["i32", "i32"], 
       res: "bool" }
 
 const binary_bool_type =
@@ -152,7 +152,7 @@ while:
         
         console.log(comp.body)
         type(comp.body, te)
-        console.log("heu")
+        console.log("heuwhile")
         return "undefined"
     },
 fun:
@@ -191,6 +191,23 @@ app:
                   unparse_types(actual_arg_types))
         }
     },
+
+    
+assmt:
+    (comp, te) => {
+        const declared_type = lookup_type(comp.sym, te)
+        const actual_type = type(comp.expr, te)
+        if (equal_type(actual_type, declared_type)) {
+            return actual_type
+        } else {
+            error("type Error in assignment; " + 
+                        "declared type: " +
+                        unparse_type(declared_type) + ", " +
+                        "actual type: " + 
+                        unparse_type(actual_type))
+        }
+    },
+
 let:
     (comp, te) => {
         const declared_type = lookup_type(comp.sym, te)
@@ -198,12 +215,17 @@ let:
         if (equal_type(actual_type, declared_type)) {
             return actual_type
         } else {
-            error("type Error in constant declaration; " + 
+            error("type Error in variable declaration; " + 
                       "declared type: " +
                       unparse_type(declared_type) + ", " +
                       "actual type: " + 
                       unparse_type(actual_type))
         }
+    },
+
+expr_stmt: 
+    (comp, te) => {
+        return type(comp.expr, te)        
     },
 seq: 
     (comp, te) => {

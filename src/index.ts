@@ -8,10 +8,14 @@ const program = `
 låt kör: bool = sant;
 låt räknare: i32 = 0;
 
-
-räknare = räknare + 1;
-    
-
+medan (kör){
+    räknare = räknare + 1;
+     om (räknare > 10){
+        kör = falskt;
+     }annars{
+         kör = sant;
+     }
+}
 
 räknare;
 `
