@@ -39,6 +39,7 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
         return {
             tag: "let",
             sym: ctx.IDENTIFIER().getText(),
+            type: ctx.TYPE().getText(),
             expr: this.visit(ctx.expression() as ExpressionContext)
         }
     }
@@ -73,17 +74,17 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
                     sym: ctx.getText()
                 }
             }
-            // Don't know if this is necessary but without all literals are strings.
-            // Wihtout this aproblem occurs that 3 + 3 is interpreted as "3" + "3" and results in "33".
             if (ctx.INT() != null){
                 return {
                     tag: "lit",
+                    type: "i32",
                     val: parseInt(ctx.getText())
                 }
             }
             else if (ctx.BOOL() != null){
                 return {
                     tag: "lit",
+                    type: "bool",
                     val: ctx.getText() === "sant"
                 }
             }else{
@@ -171,6 +172,7 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
         return {
             tag: "fun",
             sym: ctx.IDENTIFIER().getText(),
+            type: ctx.TYPE().getText(),
             prms: params,
             body: this.visit(ctx.block()),
         }
@@ -182,7 +184,6 @@ class RostEvaluatorVisitor extends AbstractParseTreeVisitor<object> implements R
             expr: this.visit(ctx.expression())
         }
     }
-
 
 }
 

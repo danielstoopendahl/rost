@@ -1,27 +1,17 @@
-om (sant){
-    låt a = 22*3 + 3;
-}annars{
-    låt mut b = 43;
+låt kör: bool = sant;
+låt räknare: i32 = 0;
+
+medan (kör){
+    räknare = räknare + 1;
+     om (räknare > 10){
+        kör = falskt;
+     }annars{
+         
+     }
 }
 
-
-fn abc(a: i32){
-    låt b: i32 = 4;
-    returnera a;
-}
-abc(3);
+räknare;
 
 
-låt incorrect: i32 = 0;
-
-om test_1() != expected_1{
-    incorrect += 1;
-}annars{}
-   
-
-fn test_1(){
-    låt a: i32 = 4;
-    låt c: i32 = a + 2;
-    återvänd c;
-}
+låt b: i32 = 4;
 

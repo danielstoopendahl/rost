@@ -66,110 +66,6 @@ const equal_types = (ts1, ts2) =>
 const equal_type = (t1, t2) =>
    unparse_type(t1) === unparse_type(t2)
 
-// combine type and subsequent variable declarations
-// into type-annotated variable declarations
-const annotate_sequence = (seq) => {
-    const len = seq.length
-    const result = []
-    let j = 0 // write pointer into result array
-    // loop through array
-    // use each type declaration ('assmt')
-    // as a type annotation for the subsequent
-    // constant declaration
-    for (let i = 0; i < len; i++) {
-        if (seq[i].tag === 'assmt') {
-           const sym = seq[i].sym
-           const t = transform_type(seq[i].expr)
-           const next = seq[++i]
-           if (next.tag === 'const' && 
-                 next.sym === sym) {
-               next.type = t
-               next.expr = annotate(next.expr)
-               result[j++] = next
-           } else if (next.tag === 'fun' &&
-                 next.sym === sym) {
-               next.type = t
-               next.body = annotate(next.body)
-               result[j++] = next                
-           } else {
-               Error(
-                   'declaration of name ' + sym +
-                   ' expected after its type declaration')
-           }
-        } else if (seq[i].tag === 'const') {
-            Error(
-               'type declaration of name ' + seq[i].sym +
-               ' before declaration missing')
-        } else {
-           result[j++] = annotate(seq[i])
-        }
-    }
-    return result
-}
-
-// display(cmd, "CMD:");
-
-// annotate_comp has the annotation
-// functions for each component tag
-const annotate_comp = {
-lit:
-    comp => comp,
-nam:
-    comp => comp,
-unop:
-    comp => ({tag: 'unop',
-               sym: comp.sym,
-               frst: annotate(comp.frst)}),
-binop:
-    comp => ({tag: 'binop',
-              sym: comp.sym,
-              frst: annotate(comp.frst),
-              scnd: annotate(comp.scnd)}),
-log:
-    comp => annotate(comp.sym == '&&' 
-                ? {tag: 'cond_expr', 
-                   pred: comp.frst, 
-                   cons: comp.scnd,
-                   alt: {tag: 'lit', val: false}}
-                : {tag: 'cond_expr',  
-                   pred: comp.frst,
-                   cons: {tag: 'lit', val: true}, 
-                   alt: comp.scnd}),
-cond_expr: 
-    comp => ({tag: 'cond_expr', 
-              pred: annotate(comp.pred), 
-              cons: annotate(comp.cons),
-              alt: annotate(comp.alt)}),
-cond_stmt: 
-    comp => ({tag: 'cond_stmt', 
-              pred: annotate(comp.pred), 
-              cons: annotate(comp.cons),
-              alt: annotate(comp.alt)}),
-app:
-    comp => ({tag: 'app',
-              fun: annotate(comp.fun),
-              args: comp.args.map(annotate)}),
-seq: 
-    comp => ({tag: 'seq',
-              stmts: annotate_sequence(comp.stmts)}),
-blk:
-    comp => ({tag: 'blk',
-              body: annotate(comp.body)}),
-ret:
-    comp => ({tag: 'ret',
-              expr: annotate(comp.expr)}),
-fun:
-    comp => annotate({tag:  'fun',
-                       sym:  comp.sym,
-                       expr: {tag: 'lam', 
-                       prms: comp.prms, 
-                       body: comp.body}})
-}
-
-// annotate declarations with
-// the preceding type declaration
-const annotate = comp =>
-    annotate_comp[comp.tag](comp)
 
 /* *****************
  * type environments
@@ -263,7 +159,7 @@ log:
     (comp, te) => type({tag: 'app',
                         fun: {tag: 'nam', sym: comp.sym},
                         args: [comp.frst, comp.scnd]}, te),
-cond_expr: 
+cond: 
     (comp, te) => {
         const t0 = type(comp.pred, te)
         if (t0 !== "bool") 
@@ -282,14 +178,7 @@ cond_expr:
                   unparse_type(t2))
         }
     },
-// outside of function bodies,
-// conditional statements are 
-// treated as conditional expressions
-cond_stmt: 
-    (comp, te) => {
-        comp.tag = "cond_expr"
-        return type(comp, te)
-    },
+
 fun:
     (comp, te) => {
         const extended_te = extend_type_environment(
@@ -297,7 +186,7 @@ fun:
                          comp.type.args,
                          te)
         const body_type = type_fun_body(comp.body, extended_te)
-        if (equal_type(body_type, comp.type.res)) {
+        if (equal_type(body_type, comp.type)) {
             return "undefined"
         } else {
             Error("type Error in function declaration; " +
@@ -326,7 +215,7 @@ app:
                   unparse_types(actual_arg_types))
         }
     },
-"const":
+let:
     (comp, te) => {
         const declared_type = lookup_type(comp.sym, te)
         const actual_type = type(comp.expr, te)
@@ -352,7 +241,7 @@ blk:
     (comp, te) => {
         // scan out declarations
         const decls = comp.body.stmts.filter(
-                         comp => comp.tag === "const" ||
+                         comp => comp.tag === "let" ||
                                  comp.tag === "fun")
         const extended_te = extend_type_environment(
                          decls.map(comp => comp.sym),
@@ -371,7 +260,7 @@ const type = (comp, te) =>
 // functions for function body statements
 // for each component tag
 const type_fun_body_stmt = {
-cond_stmt: 
+cond: 
     (comp, te) => {
         const t0 = type(comp.pred, te)
         if (t0 !== "bool") 
@@ -405,7 +294,7 @@ blk:
     (comp, te) => {
         // scan out declarations
         const decls = comp.body.stmts.filter(
-                         comp => comp.tag === "const")
+                         comp => comp.tag === "let")
         const extended_te = extend_type_environment(
                          decls.map(comp => comp.sym),
                          decls.map(comp => comp.type),
@@ -429,7 +318,7 @@ const type_fun_body = (comp, te) => {
 
 export const check_type = (json_program) => {
     try {
-         return unparse_type(type(annotate(json_program), global_type_environment))
+         return unparse_type(type(json_program, global_type_environment))
     } catch(x) {
         throw new Error(`Type Error: ${x}`)
     }
