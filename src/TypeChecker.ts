@@ -97,7 +97,7 @@ const extend_type_environment = (xs, ts, e) => {
 const type_comp = {
 lit:
     (comp, te) => typeof comp.val === "number" 
-                  ? "number"
+                  ? "i32"
                   : typeof comp.val === "boolean" 
                   ? "bool"
                   : typeof comp.val === "undefined" 
