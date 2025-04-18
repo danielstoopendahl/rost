@@ -141,6 +141,20 @@ cond:
         }
     },
 
+while:
+    (comp, te) => {
+        const t0 = type(comp.pred, te)
+        if (t0 !== "bool"){
+            error("expected predicate type: bool, " +
+                  "actual predicate type: " + 
+                  unparse_type(t0))
+        }
+        
+        console.log(comp.body)
+        type(comp.body, te)
+        console.log("heu")
+        return "undefined"
+    },
 fun:
     (comp, te) => {
         const extended_te = extend_type_environment(

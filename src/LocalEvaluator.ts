@@ -9,8 +9,7 @@ import { RostJSONBuilder } from "./TreeBuilder";
 export function evaluate(chunk: string) {
     try {
         const visitor: RostJSONBuilder = new RostJSONBuilder();
-        // Create the lexer and parser
-        //const chunk = fs.readFileSync(0, 'utf-8'); // 0 refers to stdin
+
 
         const inputStream = CharStream.fromString(chunk);
         const lexer = new RostLexer(inputStream);
