@@ -12,9 +12,11 @@ const unparse_types = ts =>
                          ? unparse_type(t) 
                          : s + ", " + unparse_type(t), "")
 const unparse_type = t =>
-    typeof t == "string"
+    typeof t === "string"
     ? t 
-    : t
+    : // t is function type
+     "(" + unparse_types(t.args) + " -> " + 
+     unparse_type(t.res) + ")"
 
 const equal_types = (ts1, ts2) =>
    unparse_types(ts1) === unparse_types(ts2)
@@ -176,7 +178,7 @@ let:
         const declared_type = lookup_type(comp.sym, te)
         const actual_type = type(comp.expr, te)
         if (equal_type(actual_type, declared_type)) {
-            return "undefined"
+            return actual_type
         } else {
             Error("type Error in constant declaration; " + 
                       "declared type: " +
