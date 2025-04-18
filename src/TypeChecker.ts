@@ -14,9 +14,7 @@ const unparse_types = ts =>
 const unparse_type = t =>
     typeof t == "string"
     ? t 
-    : // t is function type
-     "(" + unparse_types(t.args) + " -> " + 
-     unparse_type(t.res) + ")"
+    : t
 
 const equal_types = (ts1, ts2) =>
    unparse_types(ts1) === unparse_types(ts2)
