@@ -25,6 +25,10 @@ const equal_type = (t1, t2) =>
    unparse_type(t1) === unparse_type(t2)
 
 
+
+const error = (msg: string) => {
+    throw new Error(msg)
+}
 /* *****************
  * type environments
  * *****************/
@@ -76,16 +80,16 @@ const global_type_environment = [global_type_frame, empty_type_environment]
 
 const lookup_type = (x, e) =>
     e === null
-    ? Error("unbound name: " + x)
+    ? error("unbound name: " + x)
     : e[0].hasOwnProperty(x) 
     ? e[0][x]
     : lookup_type(x, e[1])
 
 const extend_type_environment = (xs, ts, e) => {
     if (ts.length > xs.length) 
-        Error('too few parameters in function declaration')
+        error('too few parameters in function declaration')
     if (ts.length < xs.length) 
-        Error('too many parameters in function declaration')
+        error('too many parameters in function declaration')
     const new_frame = {}
     for (let i = 0; i < xs.length; i++) 
         new_frame[xs[i]] = ts[i]
@@ -102,7 +106,7 @@ lit:
                   ? "bool"
                   : typeof comp.val === "undefined" 
                   ? "undefined"
-                  : Error("unknown literal: " + comp.val),
+                  : error("unknown literal: " + comp.val),
 nam:
     (comp, te) => lookup_type(comp.sym, te),
 unop:
@@ -121,7 +125,7 @@ cond:
     (comp, te) => {
         const t0 = type(comp.pred, te)
         if (t0 !== "bool") 
-            Error("expected predicate type: bool, " +
+            error("expected predicate type: bool, " +
                   "actual predicate type: " + 
                   unparse_type(t0))
         const t1 = type(comp.cons, te)
@@ -129,7 +133,7 @@ cond:
         if (equal_type(t1, t2)) {
             return t1
         } else {
-            Error("types of branches not matching; " +
+            error("types of branches not matching; " +
                   "consequent type: " + 
                   unparse_type(t1) + ", " +
                   "alternative type: " + 
@@ -147,7 +151,7 @@ fun:
         if (equal_type(body_type, comp.type.res)) {
             return "undefined"
         } else {
-            Error("type Error in function declaration; " +
+            error("type Error in function declaration; " +
                       "declared return type: " +
                       unparse_type(comp.type.res) + ", " +
                       "actual return type: " + 
@@ -158,7 +162,7 @@ app:
     (comp, te) => {
         const fun_type = type(comp.fun, te)
         if (fun_type.tag !== "fun") 
-            Error("type Error in application; function " +
+            error("type Error in application; function " +
                       "expression must have function type; " +
                       "actual type: " + unparse_type(fun_type))
         const expected_arg_types = fun_type.args
@@ -166,7 +170,7 @@ app:
         if (equal_types(actual_arg_types, expected_arg_types)) {
             return fun_type.res
         } else {
-            Error("type Error in application; " +
+            error("type Error in application; " +
                   "expected argument types: " + 
                   unparse_types(expected_arg_types) + ", " +
                   "actual argument types: " + 
@@ -180,7 +184,7 @@ let:
         if (equal_type(actual_type, declared_type)) {
             return actual_type
         } else {
-            Error("type Error in constant declaration; " + 
+            error("type Error in constant declaration; " + 
                       "declared type: " +
                       unparse_type(declared_type) + ", " +
                       "actual type: " + 
@@ -222,7 +226,7 @@ cond:
     (comp, te) => {
         const t0 = type(comp.pred, te)
         if (t0 !== "bool") 
-            Error("expected predicate type: bool, " +
+            error("expected predicate type: bool, " +
                   "actual predicate type: " + 
                   unparse_type(t0))
         const t1 = type_fun_body(comp.cons, te)
@@ -230,7 +234,7 @@ cond:
         if (equal_type(t1, t2)) {
             return t1
         } else {
-            Error("types of branches not matching; " +
+            error("types of branches not matching; " +
                   "consequent type: " + 
                   unparse_type(t1) + ", " +
                   "alternative type: " + 
@@ -275,9 +279,6 @@ const type_fun_body = (comp, te) => {
 
 
 export const check_type = (json_program) => {
-    try {
-         return unparse_type(type(json_program, global_type_environment))
-    } catch(x) {
-        throw new Error(`Type Error: ${x}`)
-    }
+    return unparse_type(type(json_program, global_type_environment))
+    
 }
