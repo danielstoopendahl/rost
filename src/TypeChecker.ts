@@ -14,9 +14,7 @@ const unparse_types = ts =>
 const unparse_type = t =>
     typeof t === "string"
     ? t 
-    : // t is function type
-     "(" + unparse_types(t.args) + " -> " + 
-     unparse_type(t.res) + ")"
+    : t
 
 const equal_types = (ts1, ts2) =>
    unparse_types(ts1) === unparse_types(ts2)
@@ -54,22 +52,23 @@ const binary_bool_type =
 const unary_bool_type =
     { tag: "fun", args: ["bool"], 
       res: "bool" }
+   
       
 const global_type_frame = {
     "undefined": "undefined",
-    "+": binary_arith_type,
-    "-": binary_arith_type,
-    "*": binary_arith_type,
-    "/": binary_arith_type,
-    "<": number_comparison_type,
-    ">": number_comparison_type,
-    "<=": number_comparison_type,
-    ">=": number_comparison_type,
-    "===": number_comparison_type,
-    "&&": binary_bool_type,
-    "||": binary_bool_type,
-    "-unary": unary_arith_type,
-    "!": unary_bool_type
+    "+": [binary_arith_type, false],
+    "-": [binary_arith_type, false],
+    "*": [binary_arith_type, false],
+    "/": [binary_arith_type, false],
+    "<": [number_comparison_type, false],
+    ">": [number_comparison_type, false],
+    "<=": [number_comparison_type, false],
+    ">=": [number_comparison_type, false],
+    "===": [number_comparison_type, false],
+    "&&": [binary_bool_type, false],
+    "||": [binary_bool_type, false],
+    "-unary": [unary_arith_type, false],
+    "!": [unary_bool_type, false]
 }
 
 // A type environment is null or a pair 
@@ -96,6 +95,18 @@ const extend_type_environment = (xs, ts, e) => {
     return [new_frame, e]
 }
 
+
+// Ownership handling
+const allocToOwner = {}
+const ownerToAlloc = {}
+let heapAllocNbr = 0
+
+const addOwnership = (symbol: string) => {
+    const allocNbr = "" + heapAllocNbr++
+    allocToOwner[allocNbr] = symbol
+    ownerToAlloc[symbol] = allocNbr
+}
+
 // type_comp has the typing
 // functions for each component tag
 const type_comp = {
@@ -108,7 +119,7 @@ lit:
                   ? "undefined"
                   : error("unknown literal: " + comp.val),
 nam:
-    (comp, te) => lookup_type(comp.sym, te),
+    (comp, te) => lookup_type(comp.sym, te)[0],
 unop:
     (comp, te) => type({tag: 'app',
                         fun: {tag: 'nam', sym: comp.sym},
@@ -187,7 +198,10 @@ assmt:
     (comp, te) => {
         const declared_type = lookup_type(comp.sym, te)
         const actual_type = type(comp.expr, te)
-        if (equal_type(actual_type, declared_type)) {
+        if (!declared_type[1]){
+            error("Attempting to mutate immutable variable: " + comp.sym)
+        }
+        if (equal_type(actual_type, declared_type[0])) {
             return actual_type
         } else {
             error("type Error in assignment; " + 
@@ -202,12 +216,14 @@ let:
     (comp, te) => {
         const declared_type = lookup_type(comp.sym, te)
         const actual_type = type(comp.expr, te)
-        if (equal_type(actual_type, declared_type)) {
+
+        if (equal_type(actual_type, declared_type[0])) {
+            addOwnership(comp.sym)
             return actual_type
         } else {
             error("type Error in variable declaration; " + 
                       "declared type: " +
-                      unparse_type(declared_type) + ", " +
+                      unparse_type(declared_type[0]) + ", " +
                       "actual type: " + 
                       unparse_type(actual_type))
         }
@@ -233,7 +249,7 @@ blk:
                                  comp.tag === "fun")
         const extended_te = extend_type_environment(
                          decls.map(comp => comp.sym),
-                         decls.map(comp => comp.type),
+                         decls.map(comp => [comp.type, comp.mut]),
                          te)
         return type(comp.body, extended_te)
     },
@@ -278,7 +294,7 @@ blk:
                          comp => comp.tag === "let")
         const extended_te = extend_type_environment(
                          decls.map(comp => comp.sym),
-                         decls.map(comp => comp.type),
+                         decls.map(comp => [comp.type, comp.mut]),
                          te)
         return type_fun_body(comp.body, extended_te)
     },

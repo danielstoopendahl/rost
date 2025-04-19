@@ -1,0 +1,5 @@
+fn abc(a: i32) -> i32 {
+    returnera a + 1;
+}
+
+abc(3);

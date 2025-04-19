@@ -25,7 +25,7 @@ export function evaluate(chunk: string) {
         const program_type = check_type(json_program)
         console.log(`Program type: ${program_type}`)
         
-        console.log(`${go(json_program, 400)}`);
+        console.log(`${go(json_program, 1600)}`);
 
         
     }  catch (error) {

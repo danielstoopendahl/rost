@@ -1,5 +1,5 @@
-låt kör: bool = sant;
-låt räknare: i32 = 0;
+låt mut kör: bool = sant;
+låt mut räknare: i32 = 0;
 
 medan (kör){
     räknare = räknare + 1;
@@ -11,5 +11,3 @@ medan (kör){
 }
 
 räknare;
-
-
