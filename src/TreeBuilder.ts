@@ -27,7 +27,6 @@ export class RostJSONBuilder extends AbstractParseTreeVisitor<object> implements
             tag: "let",
             sym: ctx.IDENTIFIER().getText(),
             type: ctx.TYPE().getText(),
-            mut: ctx.mutable() !== null,
             expr: this.visit(ctx.expression() as ExpressionContext)
         }
     }

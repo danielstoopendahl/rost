@@ -8,7 +8,6 @@ import { StatementContext } from "./RostParser.js";
 import { BlockContext } from "./RostParser.js";
 import { SequenceContext } from "./RostParser.js";
 import { LetStmtContext } from "./RostParser.js";
-import { MutableContext } from "./RostParser.js";
 import { AssignmentContext } from "./RostParser.js";
 import { FunDeclContext } from "./RostParser.js";
 import { ParamListContext } from "./RostParser.js";
@@ -62,12 +61,6 @@ export class RostVisitor<Result> extends AbstractParseTreeVisitor<Result> {
      * @return the visitor result
      */
     visitLetStmt?: (ctx: LetStmtContext) => Result;
-    /**
-     * Visit a parse tree produced by `RostParser.mutable`.
-     * @param ctx the parse tree
-     * @return the visitor result
-     */
-    visitMutable?: (ctx: MutableContext) => Result;
     /**
      * Visit a parse tree produced by `RostParser.assignment`.
      * @param ctx the parse tree

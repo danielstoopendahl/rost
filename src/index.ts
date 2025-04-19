@@ -5,11 +5,9 @@ import { evaluate } from "./LocalEvaluator";
 // const { runnerPlugin, conduit } = initialise(RostEvaluator);
 
 const program = `
-fn abc(a: i32) -> i32 {
-    returnera a + 1;
-}
+låt mut a : i32 = 4;
 
-abc(3);
+
 `
 
 evaluate(program)

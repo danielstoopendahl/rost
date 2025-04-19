@@ -14,7 +14,7 @@ const unparse_types = ts =>
 const unparse_type = t =>
     typeof t === "string"
     ? t 
-    : t
+    : t // Revert
 
 const equal_types = (ts1, ts2) =>
    unparse_types(ts1) === unparse_types(ts2)
@@ -112,14 +112,14 @@ const addOwnership = (symbol: string) => {
 const type_comp = {
 lit:
     (comp, te) => typeof comp.val === "number" 
-                  ? "i32"
+                  ? ["i32", false]
                   : typeof comp.val === "boolean" 
-                  ? "bool"
+                  ? ["bool", false]
                   : typeof comp.val === "undefined" 
                   ? "undefined"
                   : error("unknown literal: " + comp.val),
 nam:
-    (comp, te) => lookup_type(comp.sym, te)[0],
+    (comp, te) => lookup_type(comp.sym, te),
 unop:
     (comp, te) => type({tag: 'app',
                         fun: {tag: 'nam', sym: comp.sym},
@@ -175,12 +175,13 @@ fun:
     },
 app:
     (comp, te) => {
-        const fun_type = type(comp.fun, te)
+        const fun_type = type(comp.fun, te)[0]
         if (fun_type.tag !== "fun") 
             error("type Error in application; function " +
                       "expression must have function type; " +
                       "actual type: " + unparse_type(fun_type))
         const expected_arg_types = fun_type.args
+        console.log(comp.args)
         const actual_arg_types = comp.args.map(e => type(e, te))
         if (equal_types(actual_arg_types, expected_arg_types)) {
             return fun_type.res
@@ -249,7 +250,7 @@ blk:
                                  comp.tag === "fun")
         const extended_te = extend_type_environment(
                          decls.map(comp => comp.sym),
-                         decls.map(comp => [comp.type, comp.mut]),
+                         decls.map(comp => comp.type),
                          te)
         return type(comp.body, extended_te)
     },
@@ -294,7 +295,7 @@ blk:
                          comp => comp.tag === "let")
         const extended_te = extend_type_environment(
                          decls.map(comp => comp.sym),
-                         decls.map(comp => [comp.type, comp.mut]),
+                         decls.map(comp => comp.type),
                          te)
         return type_fun_body(comp.body, extended_te)
     },
