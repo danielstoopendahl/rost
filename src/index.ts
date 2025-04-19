@@ -5,20 +5,11 @@ import { evaluate } from "./LocalEvaluator";
 // const { runnerPlugin, conduit } = initialise(RostEvaluator);
 
 const program = `
-låt kör: bool = sant;
-låt räknare: i32 = 0;
-
-medan (kör){
-    räknare = räknare + 1;
-     om (räknare > 10){
-        kör = falskt;
-     }annars{
-        
-     }
+fn abc(a: i32) -> i32 {
+    returnera a + 1;
 }
 
-räknare;
-
+abc(3);
 `
 
 evaluate(program)

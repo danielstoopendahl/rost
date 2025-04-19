@@ -51,38 +51,20 @@ const heap_display = (s, conductor) => {
     }
 }
 
-const mark = (r) => {
-        if (heap_get_byte_at_offset(r, 7) !== 1) {
-            heap_set_byte_at_offset(r, 7, 1)
-            let nbr_children = heap_get_number_of_children(r)
-            for (let i = 0; i <= nbr_children; i++) {
-                let child = heap_get_child(r, i)
-                mark(child)
-            }
-        }
-}
+// const sweep = () => {
+//     let addr = heap_size - node_size
+//     while (addr > 5 * node_size) {
+//         if (heap_get_byte_at_offset(addr, 7) !== 1){
+//             heap_set(addr, free)
+//             free = addr
+//         }else{
+//             heap_set_byte_at_offset(addr, 7, 0)
+//         }
+//         addr = addr - node_size
+//     }
+// }
 
-const sweep = () => {
-    let addr = heap_size - node_size
-    while (addr > 5 * node_size) {
-        if (heap_get_byte_at_offset(addr, 7) !== 1){
-            heap_set(addr, free)
-            free = addr
-        }else{
-            heap_set_byte_at_offset(addr, 7, 0)
-        }
-        addr = addr - node_size
-    }
-}
 
-const mark_and_sweep = () => {
-    mark(E)
-    for (let i = 0; i < RTS.length; i++){
-        let r = RTS[i];
-        mark(r)
-    }
-    sweep()
-}
 // heap_allocate allocates a given number of words 
 // on the heap and marks the first word with a 1-byte tag.
 // the last two bytes of the first word indicate the number
@@ -103,10 +85,7 @@ const heap_allocate = (tag, size) => {
 	// end of the free list
 	    
         if (free === -1) {
-            mark_and_sweep()
-            if(free === -1){
-                throw new Error("heap memory exhausted")
-            }
+            throw new Error("heap memory exhausted")
         }
         const address = free 
         free = heap_get(free)
@@ -320,10 +299,10 @@ const heap_Frame_display = (address, conductor) => {
         conductor.sendOutput(word_to_string(value), "value word:")
     }
 }
-    
+
 // environment
 // [1 byte tag, 4 bytes unused, 
-//  2 bytes #children, 1 byte unused] 
+// 2 bytes #children, 1 byte unused] 
 // followed by the addresses of its frames
 
 const heap_allocate_Environment = number_of_frames => 
@@ -767,7 +746,7 @@ CALL:
     const new_PC = heap_get_Closure_pc(fun)
     const new_frame = heap_allocate_Frame(arity)
     for (let i = arity - 1; i >= 0; i--) {
-    heap_set_child(new_frame, i, OS.pop())
+        heap_set_child(new_frame, i, OS.pop())
     }
     OS.pop() // pop fun
     push(RTS, heap_allocate_Callframe(E, PC))
@@ -781,11 +760,11 @@ RESET:
     // keep popping...
     const top_frame = RTS.pop()
     if (is_Callframe(top_frame)) {
-    // ...until top frame is a call frame
-    PC = heap_get_Callframe_pc(top_frame)
-    E = heap_get_Callframe_environment(top_frame)
+        // ...until top frame is a call frame
+        PC = heap_get_Callframe_pc(top_frame)
+        E = heap_get_Callframe_environment(top_frame)
     } else {
-    PC--
+        PC--
     }    
     }
 }
