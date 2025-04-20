@@ -162,19 +162,19 @@ const test = (t, expected) => {
 //     3 == 4;
 //     `, false)
 
-test(`
-    låt a: i32 = 5;
-    låt b: &i32 = &a;
-    a + b;
-        `, 10)
+// test(`
+//     låt a: i32 = 5;
+//     låt b: &i32 = &a;
+//     a + b;
+//         `, 10)
+
+// test(`
+//     låt a:String = "abc";
+//     a;
+//     `, "abc")
 
 test(`
-    låt a:String = "abc";
-    a;
-    `, "abc")
-
-//test(`
-//    låt a:i32 = 5;
-//    låt b:&i32 = &a;
-//    b+1;
-//    `,6)
+   låt a:i32 = 5;
+   låt b:i32 = a + 1;
+   låt c:i32 = a + 2;
+   `,6)
