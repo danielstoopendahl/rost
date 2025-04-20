@@ -94,6 +94,31 @@ const extend_type_environment = (xs, ts, e) => {
     return [new_frame, e]
 }
 
+interface OwnerAllocTuple {
+    owner: string,
+    alloc: string
+}
+// Ownership handling 
+const allocToOwner = new Array<OwnerAllocTuple>();
+let heapAllocNbr = 0
+let currentOwner = undefined
+let inLet = false
+
+const addOwnership = (symbol: string) => {
+    const allocNbr = "" + heapAllocNbr++
+    allocToOwner.push({owner: symbol, alloc: allocNbr})
+}
+
+const transferOwnership = (from: string, to: string) => {
+    const index = allocToOwner.findIndex((x) => x.owner === from);
+    if (index === -1) {
+        error("Owner doesn't exist");
+    }
+    const aEntry = allocToOwner[index];
+    allocToOwner.splice(index, 1); 
+    allocToOwner.push({ owner: to, alloc: aEntry.alloc });
+}
+
 
 // type_comp has the typing
 // functions for each component tag
@@ -109,12 +134,20 @@ lit:
 nam:
     (comp, te) => {
         const lt = lookup_type(comp.sym, te)
-        if (comp.isBorrow){
-            return "&" +lt
+        if (lt.tag !== "fun"){
+            if (comp.isBorrow){
+                // Keep track of borrows
+                return "&" +lt
+            }else{
+                if(inLet){
+                    transferOwnership(comp.sym, currentOwner)
+                }
+                return lt
+            }
         }else{
             return lt
         }
-    
+        
     },
 unop:
     (comp, te) => type({tag: 'app',
@@ -210,12 +243,17 @@ assmt:
 
 let:
     (comp, te) => {
+        currentOwner = comp.sym
+        inLet = true
         const declared_type = lookup_type(comp.sym, te)
         const actual_type = type(comp.expr, te)
 
         if (equal_type(actual_type, declared_type)) {
+            addOwnership(comp.sym)
+            inLet = false
             return actual_type
         } else {
+            inLet = false
             error("type Error in variable declaration; " + 
                       "declared type: " +
                       unparse_type(declared_type) + ", " +
@@ -246,7 +284,8 @@ blk:
                          decls.map(comp => comp.sym),
                          decls.map(comp => comp.type),
                          te)
-        return type(comp.body, extended_te)
+        const blkType = type(comp.body, extended_te)
+        return blkType
     },
 ret:
     (comp, te) => comp
@@ -316,6 +355,8 @@ const type_fun_body = (comp, te) => {
 
 
 export const check_type = (json_program) => {
-    return unparse_type(type(json_program, global_type_environment))
+    const t = unparse_type(type(json_program, global_type_environment))
+    console.log(allocToOwner)
+    return t
     
 }
