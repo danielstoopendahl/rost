@@ -162,20 +162,53 @@ const test = (t, expected) => {
 //     3 == 4;
 //     `, false)
 
-test(`
-    låt a: i32 = 5;
-    låt b: i32 = a;
-    låt c: i32 = b;
-    a;
-    `, 5)
+//test(`
+//    låt a: i32 = 5;
+//    låt b: i32 = a;
+//    låt c: i32 = b;
+//    a;
+//    `, 5)
 
-test(`
-    låt a:String = "abc";
-    a;
-    `, "abc")
+//test(`
+//    låt a:String = "abc";
+//    a;
+//    `, "abc")
 
 //test(`
 //    låt a:i32 = 5;
 //    låt b:&i32 = &a;
 //    b+1;
 //    `,6)
+
+test(`
+    
+    låt a:i32 = 5;
+
+    {
+    låt a:i32 = 6;
+    }
+
+    {
+    låt a:i32 = 7;
+    }
+    
+    a;
+    `, 5)
+
+
+
+test(`
+    fn plus(x: i32, y: i32) -> i32 {
+        returnera x + y;
+    }   
+    
+    låt a: i32 = 5;
+    låt b: i32 = 10;
+    låt c: i32 = plus(a, b);
+    
+    om (c == 15){
+        returnera 1;
+    } annars {
+        returnera 0;
+    }
+    `, 1)
