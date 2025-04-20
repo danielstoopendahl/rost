@@ -46,7 +46,7 @@ const number_comparison_type =
       res: "bool" }
 
 const binary_bool_type =
-    { tag: "fun", args: ["bool"], 
+    { tag: "fun", args: ["bool", "bool"], 
       res: "bool" }
       
 const unary_bool_type =
@@ -64,7 +64,7 @@ const global_type_frame = {
     ">": number_comparison_type,
     "<=": number_comparison_type,
     ">=": number_comparison_type,
-    "===": number_comparison_type,
+    "==": number_comparison_type,
     "&&": binary_bool_type,
     "||": binary_bool_type,
     "-unary": unary_arith_type,
@@ -94,17 +94,6 @@ const extend_type_environment = (xs, ts, e) => {
     return [new_frame, e]
 }
 
-
-// Ownership handling
-const allocToOwner = {}
-const ownerToAlloc = {}
-let heapAllocNbr = 0
-
-const addOwnership = (symbol: string) => {
-    const allocNbr = "" + heapAllocNbr++
-    allocToOwner[allocNbr] = symbol
-    ownerToAlloc[symbol] = allocNbr
-}
 
 // type_comp has the typing
 // functions for each component tag
@@ -217,7 +206,6 @@ let:
         const actual_type = type(comp.expr, te)
 
         if (equal_type(actual_type, declared_type)) {
-            addOwnership(comp.sym)
             return actual_type
         } else {
             error("type Error in variable declaration; " + 

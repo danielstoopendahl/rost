@@ -659,8 +659,11 @@ const binop_microcode = {
     '<=':  (x, y) => x <= y,
     '>=':  (x, y) => x >= y,
     '>':   (x, y) => x > y,
-    '===': (x, y) => x === y,
-    '!==': (x, y) => x !== y
+    '==': (x, y) => x === y,
+    '!==': (x, y) => x !== y,
+    '&&': (x, y) => x && y,
+    '||': (x, y) => x || y,
+
 }
 
 // v2 is popped before v1
@@ -810,7 +813,7 @@ function run(heapsize_words) {
 
 export function go(json, heapsize_words) {
     compile_program(json)
-    console.log(JSON.stringify(instrs));
+    //console.log(JSON.stringify(instrs));
     const result = run(heapsize_words)
     return result
 }

@@ -46,6 +46,7 @@ elseBranch
  */
 
 whileStmt: 'medan' cond=expression body=block;
+//Not used
 breakStmt: 'bryt' ';';
 continueStmt: 'fortsätt' ';';
 
@@ -61,6 +62,7 @@ expression
     | INT
     | BOOL
     | IDENTIFIER
+    | '&' IDENTIFIER
     ;
 
 expressionStatement: expression ';';
@@ -69,7 +71,7 @@ functionCallExpression: IDENTIFIER '(' argList? ')';
 argList: expression (',' expression)*;
 
 
-TYPE: 'bool' | 'i32';
+TYPE: 'bool' | 'i32' | '&bool' | '&i32';
 BOOL: 'sant' | 'falskt';
 INT: [0-9]+;
 IDENTIFIER: [a-zA-Z_åäöÅÄÖ][a-zA-Z0-9_åäöÅÄÖ]*;
