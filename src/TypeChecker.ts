@@ -95,24 +95,27 @@ const extend_type_environment = (xs, ts, e) => {
     return [new_frame, e]
 }
 
-interface OwnerAllocTuple {
+interface OwnerAlloc {
+    scope: string,
     owner: string,
-    alloc: string
+    heapNbr: string
 }
 // Ownership handling 
-const allocToOwner = new Array<OwnerAllocTuple>();
+const allocToOwner = new Array<OwnerAlloc>();
 let heapAllocNbr = 0
 let currentOwner = undefined
 let inLet = false
+let scopeNbr = -1
 
 const addOwnership = (symbol: string) => {
     console.log("Adding ownership of: " + symbol)
     const allocNbr = "" + heapAllocNbr++
-    allocToOwner.push({owner: symbol, alloc: allocNbr})
+    allocToOwner.push({scope: "" + scopeNbr, owner: symbol, heapNbr: allocNbr})
     console.log(allocToOwner)
 }
 
 const transferOwnership = (from: string, to: string) => {
+    console.log("Transferring ownership from: " + from + " to: " + to)
     const matchingEntries = allocToOwner.filter((x) => x.owner === from);
     if (matchingEntries.length === 0) {
         error("Owner doesn't exist");
@@ -120,18 +123,23 @@ const transferOwnership = (from: string, to: string) => {
     // Update ownership for all matching entries
     matchingEntries.forEach((entry) => {
         const index = allocToOwner.findIndex((x) => x === entry);
-        allocToOwner[index] = { owner: to, alloc: entry.alloc };
-    });
+        allocToOwner[index] = {scope: "" + scopeNbr,  owner: to, heapNbr: entry.heapNbr };
+    }); 
+    console.log(allocToOwner)
 };
 
-const drop = (symbol: string) => {
-    console.log("Dropping ownership of: " + symbol)
-    
-    const index = allocToOwner.findLastIndex((x) => x.owner === symbol);
-    if (index === -1) {
-        error(`Drop ${symbol}: Owner doesn't exist`);
+const drop = (scopeNbr) => {
+    console.log("Dropping ownership of scope: " + scopeNbr)
+    const matchingEntries = allocToOwner.filter((x) =>x.scope === "" + scopeNbr);
+    if (matchingEntries.length === 0) {
+        error("Scope doesn't exist");
     }
-    allocToOwner.splice(index, 1); 
+    else{
+    matchingEntries.forEach((entry) => {
+        const index = allocToOwner.findIndex((x) => x === entry);
+        allocToOwner.splice(index, 1); 
+    });
+    }
     console.log(allocToOwner)
 }
 
@@ -307,6 +315,7 @@ seq:
     },
 blk:
     (comp, te) => {
+        scopeNbr++;
         // scan out declarations
         const decls = comp.body.stmts.filter(
                          comp => comp.tag === "let" ||
@@ -318,6 +327,8 @@ blk:
         
         const blkType = type(comp.body, extended_te)
 
+        drop(scopeNbr)
+        scopeNbr--;
         return blkType
     },
 ret:
@@ -363,6 +374,7 @@ seq:
     },
 blk:
     (comp, te) => {
+        scopeNbr++;
         // scan out declarations
         const decls = comp.body.stmts.filter(
                          comp => comp.tag === "let")
@@ -370,7 +382,11 @@ blk:
                          decls.map(comp => comp.sym),
                          decls.map(comp => comp.type),
                          te)
-        return type_fun_body(comp.body, extended_te)
+
+        const blkType = type_fun_body(comp.body, extended_te)
+        drop(scopeNbr)
+        scopeNbr--;
+        return blkType
     },
 ret:
     (comp, te) => type(comp.expr, te)
