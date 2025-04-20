@@ -184,6 +184,14 @@ const test = (t, expected) => {
 //    b+1;
 //    `,6)
 
+//test(`
+//    låt a:i32 = 5;
+//    låt b:i32 = a + 1;
+//    låt c:i32 = a + 2;
+//
+//    b;
+//    `,6)
+
 test(`
     
     låt a:i32 = 5;
@@ -197,27 +205,43 @@ test(`
     }
     
     a;
-    `, 5)
+`, 5)
+//
+//test(`
+//    
+//    fn knasbana() -> i32 {
+//        låt a:i32 = 5;
+//        låt b:i32 = 10;
+//        låt c:i32 = a + b;
+//        returnera c;
+//    }
+//
+//    låt a:i32 = knasbana();
+//    a;
+//}
+//    
+//`, 15)
+//
+//test(`
+//    fn plus(x: &i32, y: &i32) -> i32 {
+//        returnera x + y;
+//    }   
+//    
+//    låt a: i32 = 5;
+//    låt b: i32 = 10;
+//    låt c: i32 = plus(&a, &b);
+//    a;
+//`, 5)
+//
+//test(`
+//    låt a:i32 = 5;
+//    låt b:i32 = a + 1;
+//    låt c:i32 = b + 2;
+//    låt d:i32 = c + 3;
+//    låt e:i32 = d + 4;
+//    låt f:i32 = e + 5;
+//    f;
+//`,20)
+//
 
 
-
-test(`
-    fn plus(x: i32, y: i32) -> i32 {
-        returnera x + y;
-    }   
-    
-    låt a: i32 = 5;
-    låt b: i32 = 10;
-    låt c: i32 = plus(a, b);
-    
-    om (c == 15){
-        returnera 1;
-    } annars {
-        returnera 0;
-    }
-    `, 1)
-test(`
-   låt a:i32 = 5;
-   låt b:i32 = a + 1;
-   låt c:i32 = a + 2;
-   `,6)
