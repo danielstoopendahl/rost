@@ -163,8 +163,18 @@ const test = (t, expected) => {
 //     `, false)
 
 test(`
-låt a: i32 = 5;
-låt b: &i32 = &a;
-a + b;
-`, 10)
+    låt a: i32 = 5;
+    låt b: &i32 = &a;
+    a + b;
+        `, 10)
 
+test(`
+    låt a:String = "abc";
+    a;
+    `, "abc")
+
+//test(`
+//    låt a:i32 = 5;
+//    låt b:&i32 = &a;
+//    b+1;
+//    `,6)

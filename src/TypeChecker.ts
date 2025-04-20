@@ -33,6 +33,7 @@ const error = (msg: string) => {
 
 // Type frames are JavaScript objects that map 
 // symbols (strings) to types.
+
 const unary_arith_type =
     { tag: "fun", args: ["i32"], 
       res: "i32" }
@@ -257,7 +258,9 @@ let:
         const actual_type = type(comp.expr, te)
 
         if (equal_type(actual_type, declared_type)) {
-            addOwnership(comp.sym)
+            if (comp.expr.tag === "lit"){
+                addOwnership(comp.sym)
+            }
             inLet = false
             return actual_type
         } else {

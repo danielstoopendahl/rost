@@ -61,6 +61,7 @@ expression
     | functionCallExpression
     | INT
     | BOOL
+    | STRING
     | IDENTIFIER
     | '&' IDENTIFIER
     ;
@@ -71,8 +72,9 @@ functionCallExpression: IDENTIFIER '(' argList? ')';
 argList: expression (',' expression)*;
 
 
-TYPE: 'bool' | 'i32' | '&bool' | '&i32';
+TYPE: 'bool' | 'i32' | '&bool' | '&i32' | 'String';
 BOOL: 'sant' | 'falskt';
+STRING: '"' (~["\r\n] | '\\"')* '"';
 INT: [0-9]+;
 IDENTIFIER: [a-zA-Z_åäöÅÄÖ][a-zA-Z0-9_åäöÅÄÖ]*;
 WS: [ \t\r\n]+ -> skip;
