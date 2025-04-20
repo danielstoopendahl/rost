@@ -211,7 +211,15 @@ app:
                       "expression must have function type; " +
                       "actual type: " + unparse_type(fun_type))
         const expected_arg_types = fun_type.args
-        const actual_arg_types = comp.args.map(e => type(e, te))
+        const actual_arg_types = comp.args.map(e => {
+            const t = type(e, te)
+            if (t[0] === "&"){
+                return t.slice(1)
+            }else{
+                return t
+            }
+        
+        })
         if (equal_types(actual_arg_types, expected_arg_types)) {
             return fun_type.res
         } else {
