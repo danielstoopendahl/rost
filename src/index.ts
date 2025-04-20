@@ -164,8 +164,7 @@ const test = (t, expected) => {
 
 test(`
 låt a: i32 = 5;
-låt b: i32 = a;
-låt c: i32 = b;
-a;
-`, 5)
+låt b: &i32 = &a;
+a + b;
+`, 10)
 
