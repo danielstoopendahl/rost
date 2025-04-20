@@ -111,14 +111,16 @@ const addOwnership = (symbol: string) => {
 }
 
 const transferOwnership = (from: string, to: string) => {
-    const index = allocToOwner.findIndex((x) => x.owner === from);
-    if (index === -1) {
+    const matchingEntries = allocToOwner.filter((x) => x.owner === from);
+    if (matchingEntries.length === 0) {
         error("Owner doesn't exist");
     }
-    const aEntry = allocToOwner[index];
-    allocToOwner.splice(index, 1); 
-    allocToOwner.push({ owner: to, alloc: aEntry.alloc });
-}
+    // Update ownership for all matching entries
+    matchingEntries.forEach((entry) => {
+        const index = allocToOwner.findIndex((x) => x === entry);
+        allocToOwner[index] = { owner: to, alloc: entry.alloc };
+    });
+};
 
 
 // type_comp has the typing
@@ -214,8 +216,13 @@ app:
         const expected_arg_types = fun_type.args
         const actual_arg_types = comp.args.map(e => {
             const t = type(e, te)
-            if (t[0] === "&"){
-                return t.slice(1)
+            console.log(t)
+            if (comp.fun.sym in global_type_frame){
+                if (t[0] === "&"){
+                    return t.slice(1)
+                }else{
+                    return t
+                }
             }else{
                 return t
             }
@@ -258,9 +265,8 @@ let:
         const actual_type = type(comp.expr, te)
 
         if (equal_type(actual_type, declared_type)) {
-            if (comp.expr.tag === "lit"){
-                addOwnership(comp.sym)
-            }
+            addOwnership(comp.sym)
+            
             inLet = false
             return actual_type
         } else {
@@ -295,7 +301,9 @@ blk:
                          decls.map(comp => comp.sym),
                          decls.map(comp => comp.type),
                          te)
+        
         const blkType = type(comp.body, extended_te)
+
         return blkType
     },
 ret:
