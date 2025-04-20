@@ -107,7 +107,15 @@ lit:
                   ? "undefined"
                   : error("unknown literal: " + comp.val),
 nam:
-    (comp, te) => lookup_type(comp.sym, te),
+    (comp, te) => {
+        const lt = lookup_type(comp.sym, te)
+        if (comp.isBorrow){
+            return "&" +lt
+        }else{
+            return lt
+        }
+    
+    },
 unop:
     (comp, te) => type({tag: 'app',
                         fun: {tag: 'nam', sym: comp.sym},

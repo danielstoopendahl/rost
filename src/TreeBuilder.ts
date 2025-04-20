@@ -85,7 +85,7 @@ export class RostJSONBuilder extends AbstractParseTreeVisitor<object> implements
                 return {
                     tag: "nam", 
                     isBorrow: true,
-                    sym: ctx.getText()
+                    sym: ctx.getChild(1).getText()
                 }
             }
             // Unary operator case
