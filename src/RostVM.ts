@@ -144,6 +144,13 @@ const heap_get_2_bytes_at_offset =
     (address, offset) => 
     HEAP.getUint16(address * word_size + offset)
 
+const heap_set_4_bytes_at_offset = (address, offset, value) =>
+	HEAP.setUint32(address * word_size + offset, value);
+
+
+const heap_get_4_bytes_at_offset = (address, offset) =>
+	HEAP.getUint32(address * word_size + offset);
+
 // for debugging: return a string that shows the bits
 // of a given word
 const word_to_string = word => {
@@ -181,6 +188,11 @@ const Callframe_tag      = 7
 const Closure_tag        = 8
 const Frame_tag          = 9  // 0000 1001
 const Environment_tag    = 10 // 0000 1010
+const String_tag         = 13
+
+// Record<string, tuple(number, string)< where the key is the hash of the string
+// and the value is a tuple of the address of the string and the string itself
+let stringPool = {};
 
 
 // all values (including literals) are allocated on the heap.
@@ -219,6 +231,64 @@ const allocate_literal_values = () => {
     Unassigned = heap_allocate(Unassigned_tag, 1)
     Undefined = heap_allocate(Undefined_tag, 1)
 }
+
+// ADDED CHANGE
+// strings:
+// [1 byte tag, 4 byte hash to stringPool,
+// 2 bytes #children, 1 byte unused]
+// Note: #children is 0
+
+// Hash any string to a 32-bit unsigned integer
+const hashString = (str) => {
+	let hash = 5381;
+	for (let i = 0; i < str.length; i++) {
+		const char = str.charCodeAt(i);
+		hash = (hash << 5) + hash + char;
+		hash = hash & hash;
+	}
+	return hash >>> 0;
+};
+
+const is_String = (address) => heap_get_tag(address) === String_tag;
+
+const heap_allocate_String = (string) => {
+	const hash = hashString(string);
+	const a = stringPool[hash];
+
+	if (a !== undefined) {
+	    for (let i = 0; i < a.length; i++) {
+            if (a[i].string === string)
+                return a[i].address;
+	    }
+        let i = a.length;
+	    const address = heap_allocate(String_tag, 2);
+	    heap_set_4_bytes_at_offset(address, 1, hash);
+	    heap_set_2_bytes_at_offset(address, 5, i);
+	    a[i] = {address, string};
+	    return address;
+	}
+
+	const address = heap_allocate(String_tag, 2);
+	heap_set_4_bytes_at_offset(address, 1, hash);
+	heap_set_2_bytes_at_offset(address, 5, 0);
+
+	// Store {address, string} in the string pool under hash at index 0
+	stringPool[hash] = [{address, string}];
+
+	return address;
+};
+
+const heap_get_string_hash = (address) =>
+	heap_get_4_bytes_at_offset(address, 1);
+
+const heap_get_string_index = (address) =>
+	heap_get_2_bytes_at_offset(address, 5);
+	
+const heap_get_string = (address) =>
+	stringPool[heap_get_string_hash(address)]
+	          [heap_get_string_index(address)]
+	          .string;
+
 
 // closure
 // [1 byte tag, 1 byte arity, 2 bytes pc, 1 byte unused, 
@@ -395,6 +465,8 @@ const address_to_JS_value = x =>
     ? undefined
     : is_Unassigned(x) 
     ? "<unassigned>" 
+    : is_String(x)
+    ? heap_get_string(x)
     : is_Null(x) 
     ? null 
     : is_Closure(x)
@@ -406,6 +478,8 @@ const JS_value_to_address = x =>
     ? (x ? True : False)
     : typeof x == "number"
     ? heap_allocate_Number(x)
+    : typeof x == "string" 
+    ? heap_allocate_String(x) 
     : typeof x == "undefined"
     ? Undefined
     : "unknown word tag: " + word_to_string(x)
