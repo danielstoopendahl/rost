@@ -150,6 +150,7 @@ export class RostJSONBuilder extends AbstractParseTreeVisitor<object> implements
     visitFunDecl(ctx: FunDeclContext): object {
         let params = []
         let funType = {
+            tag: "fun",
             res: ctx.TYPE().getText(),
             args: []
         }

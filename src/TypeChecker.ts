@@ -56,21 +56,20 @@ const unary_bool_type =
       
 const global_type_frame = {
     "undefined": "undefined",
-    "+": [binary_arith_type, false],
-    "-": [binary_arith_type, false],
-    "*": [binary_arith_type, false],
-    "/": [binary_arith_type, false],
-    "<": [number_comparison_type, false],
-    ">": [number_comparison_type, false],
-    "<=": [number_comparison_type, false],
-    ">=": [number_comparison_type, false],
-    "===": [number_comparison_type, false],
-    "&&": [binary_bool_type, false],
-    "||": [binary_bool_type, false],
-    "-unary": [unary_arith_type, false],
-    "!": [unary_bool_type, false]
+    "+": binary_arith_type,
+    "-": binary_arith_type,
+    "*": binary_arith_type,
+    "/": binary_arith_type,
+    "<": number_comparison_type,
+    ">": number_comparison_type,
+    "<=": number_comparison_type,
+    ">=": number_comparison_type,
+    "===": number_comparison_type,
+    "&&": binary_bool_type,
+    "||": binary_bool_type,
+    "-unary": unary_arith_type,
+    "!": unary_bool_type
 }
-
 // A type environment is null or a pair 
 // whose head is a frame and whose tail 
 // is a type environment.
@@ -112,9 +111,9 @@ const addOwnership = (symbol: string) => {
 const type_comp = {
 lit:
     (comp, te) => typeof comp.val === "number" 
-                  ? ["i32", false]
+                  ? "i32"
                   : typeof comp.val === "boolean" 
-                  ? ["bool", false]
+                  ? "bool"
                   : typeof comp.val === "undefined" 
                   ? "undefined"
                   : error("unknown literal: " + comp.val),
@@ -175,13 +174,13 @@ fun:
     },
 app:
     (comp, te) => {
-        const fun_type = type(comp.fun, te)[0]
+        const fun_type = type(comp.fun, te)
+
         if (fun_type.tag !== "fun") 
             error("type Error in application; function " +
                       "expression must have function type; " +
                       "actual type: " + unparse_type(fun_type))
         const expected_arg_types = fun_type.args
-        console.log(comp.args)
         const actual_arg_types = comp.args.map(e => type(e, te))
         if (equal_types(actual_arg_types, expected_arg_types)) {
             return fun_type.res
@@ -197,12 +196,11 @@ app:
     
 assmt:
     (comp, te) => {
+        error("Attempting to mutate immutable variable: " + comp.sym)
         const declared_type = lookup_type(comp.sym, te)
         const actual_type = type(comp.expr, te)
-        if (!declared_type[1]){
-            error("Attempting to mutate immutable variable: " + comp.sym)
-        }
-        if (equal_type(actual_type, declared_type[0])) {
+        
+        if (equal_type(actual_type, declared_type)) {
             return actual_type
         } else {
             error("type Error in assignment; " + 
@@ -218,13 +216,13 @@ let:
         const declared_type = lookup_type(comp.sym, te)
         const actual_type = type(comp.expr, te)
 
-        if (equal_type(actual_type, declared_type[0])) {
+        if (equal_type(actual_type, declared_type)) {
             addOwnership(comp.sym)
             return actual_type
         } else {
             error("type Error in variable declaration; " + 
                       "declared type: " +
-                      unparse_type(declared_type[0]) + ", " +
+                      unparse_type(declared_type) + ", " +
                       "actual type: " + 
                       unparse_type(actual_type))
         }
@@ -270,12 +268,19 @@ cond:
         const t0 = type(comp.pred, te)
         if (t0 !== "bool") 
             error("expected predicate type: bool, " +
-                  "actual predicate type: " + 
-                  unparse_type(t0))
+                "actual predicate type: " + 
+                unparse_type(t0))
         const t1 = type_fun_body(comp.cons, te)
         const t2 = type_fun_body(comp.alt, te)
-        return "undefined"
-
+        if (equal_type(t1, t2)) {
+            return t1
+        } else {
+            error("types of branches not matching; " +
+                "consequent type: " + 
+                unparse_type(t1) + ", " +
+                "alternative type: " + 
+                unparse_type(t2))
+        }
     },
 seq: 
     (comp, te) => {
