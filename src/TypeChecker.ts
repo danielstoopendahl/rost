@@ -113,16 +113,16 @@ const addOwnership = (symbol: string) => {
 }
 
 const transferOwnership = (from: string, to: string) => {
-    console.log("Transferring ownership of: " + from + " to: " + to)
-    const index = allocToOwner.findIndex((x) => x.owner === from);
-    if (index === -1) {
-        error("Transfer: Owner doesn't exist");
+    const matchingEntries = allocToOwner.filter((x) => x.owner === from);
+    if (matchingEntries.length === 0) {
+        error("Owner doesn't exist");
     }
-    const aEntry = allocToOwner[index];
-    allocToOwner.splice(index, 1); 
-    allocToOwner.push({ owner: to, alloc: aEntry.alloc });
-    console.log(allocToOwner)
-}
+    // Update ownership for all matching entries
+    matchingEntries.forEach((entry) => {
+        const index = allocToOwner.findIndex((x) => x === entry);
+        allocToOwner[index] = { owner: to, alloc: entry.alloc };
+    });
+};
 
 const drop = (symbol: string) => {
     console.log("Dropping ownership of: " + symbol)
@@ -228,7 +228,20 @@ app:
                       "expression must have function type; " +
                       "actual type: " + unparse_type(fun_type))
         const expected_arg_types = fun_type.args
-        const actual_arg_types = comp.args.map(e => type(e, te))
+        const actual_arg_types = comp.args.map(e => {
+            const t = type(e, te)
+            console.log(t)
+            if (comp.fun.sym in global_type_frame){
+                if (t[0] === "&"){
+                    return t.slice(1)
+                }else{
+                    return t
+                }
+            }else{
+                return t
+            }
+        
+        })
         if (equal_types(actual_arg_types, expected_arg_types)) {
             return fun_type.res
         } else {
@@ -266,9 +279,8 @@ let:
         const actual_type = type(comp.expr, te)
 
         if (equal_type(actual_type, declared_type)) {
-            if (comp.expr.tag === "lit"){
-                addOwnership(comp.sym)
-            }
+            addOwnership(comp.sym)
+            
             inLet = false
             return actual_type
         } else {
@@ -303,13 +315,9 @@ blk:
                          decls.map(comp => comp.sym),
                          decls.map(comp => comp.type),
                          te)
+        
         const blkType = type(comp.body, extended_te)
-        for (const decl of decls) {
-            if (decl.tag === "let"){
-                // Drop ownership of the variable
-                drop(decl.sym)
-            }
-        }
+
         return blkType
     },
 ret:
