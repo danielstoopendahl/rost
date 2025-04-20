@@ -108,14 +108,14 @@ let inLet = false
 let scopeNbr = -1
 
 const addOwnership = (symbol: string) => {
-    console.log("Adding ownership of: " + symbol)
+    //console.log("Adding ownership of: " + symbol)
     const allocNbr = "" + heapAllocNbr++
     allocToOwner.push({scope: "" + scopeNbr, owner: symbol, heapNbr: allocNbr})
-    console.log(allocToOwner)
+    //console.log(allocToOwner)
 }
 
 const transferOwnership = (from: string, to: string) => {
-    console.log("Transferring ownership from: " + from + " to: " + to)
+    //console.log("Transferring ownership from: " + from + " to: " + to)
     const matchingEntries = allocToOwner.filter((x) => x.owner === from);
     if (matchingEntries.length === 0) {
         error("Owner doesn't exist");
@@ -125,11 +125,11 @@ const transferOwnership = (from: string, to: string) => {
         const index = allocToOwner.findIndex((x) => x === entry);
         allocToOwner[index] = {scope: "" + scopeNbr,  owner: to, heapNbr: entry.heapNbr };
     }); 
-    console.log(allocToOwner)
+    //console.log(allocToOwner)
 };
 
 const drop = (scopeNbr) => {
-    console.log("Dropping ownership of scope: " + scopeNbr)
+    //console.log("Dropping ownership of scope: " + scopeNbr)
     const matchingEntries = allocToOwner.filter((x) =>x.scope === "" + scopeNbr);
     if (matchingEntries.length === 0) {
         error("Scope doesn't exist");
@@ -140,7 +140,7 @@ const drop = (scopeNbr) => {
         allocToOwner.splice(index, 1); 
     });
     }
-    console.log(allocToOwner)
+    //console.log(allocToOwner)
 }
 
 // type_comp has the typing
