@@ -106,20 +106,34 @@ let currentOwner = undefined
 let inLet = false
 
 const addOwnership = (symbol: string) => {
+    console.log("Adding ownership of: " + symbol)
     const allocNbr = "" + heapAllocNbr++
     allocToOwner.push({owner: symbol, alloc: allocNbr})
+    console.log(allocToOwner)
 }
 
 const transferOwnership = (from: string, to: string) => {
+    console.log("Transferring ownership of: " + from + " to: " + to)
     const index = allocToOwner.findIndex((x) => x.owner === from);
     if (index === -1) {
-        error("Owner doesn't exist");
+        error("Transfer: Owner doesn't exist");
     }
     const aEntry = allocToOwner[index];
     allocToOwner.splice(index, 1); 
     allocToOwner.push({ owner: to, alloc: aEntry.alloc });
+    console.log(allocToOwner)
 }
 
+const drop = (symbol: string) => {
+    console.log("Dropping ownership of: " + symbol)
+    
+    const index = allocToOwner.findLastIndex((x) => x.owner === symbol);
+    if (index === -1) {
+        error(`Drop ${symbol}: Owner doesn't exist`);
+    }
+    allocToOwner.splice(index, 1); 
+    console.log(allocToOwner)
+}
 
 // type_comp has the typing
 // functions for each component tag
@@ -129,6 +143,8 @@ lit:
                   ? "i32"
                   : typeof comp.val === "boolean" 
                   ? "bool"
+                  : typeof comp.val === "string"
+                  ? "String"
                   : typeof comp.val === "undefined" 
                   ? "undefined"
                   : error("unknown literal: " + comp.val),
@@ -288,6 +304,12 @@ blk:
                          decls.map(comp => comp.type),
                          te)
         const blkType = type(comp.body, extended_te)
+        for (const decl of decls) {
+            if (decl.tag === "let"){
+                // Drop ownership of the variable
+                drop(decl.sym)
+            }
+        }
         return blkType
     },
 ret:
