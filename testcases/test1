@@ -1,13 +1,3 @@
-låt mut kör: bool = sant;
-låt mut räknare: i32 = 0;
-
-medan (kör){
-    räknare = räknare + 1;
-     om (räknare > 10){
-        kör = falskt;
-     }annars{
-         
-     }
+medan (falskt){
+   1;
 }
-
-räknare;

@@ -20,12 +20,12 @@ export function evaluate(chunk: string) {
         
         // Create JSON parse tree
         const json_program = visitor.visit(tree);
-        console.log(`JSON tree: ${JSON.stringify(json_program)}`);
+        //console.log(`JSON tree: ${JSON.stringify(json_program)}`);
 
         const program_type = check_type(json_program)
-        console.log(`Program type: ${program_type}`)
+        //console.log(`Program type: ${program_type}`)
         
-        console.log(`${go(json_program, 1600)}`);
+        return go(json_program, 1600)
 
         
     }  catch (error) {

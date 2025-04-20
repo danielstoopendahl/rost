@@ -58,6 +58,7 @@ export class RostJSONBuilder extends AbstractParseTreeVisitor<object> implements
             if (ctx.IDENTIFIER() != null){
                 return {
                     tag: "nam", 
+                    isBorrow: false,
                     sym: ctx.getText()
                 }
             }
@@ -80,12 +81,21 @@ export class RostJSONBuilder extends AbstractParseTreeVisitor<object> implements
             
 
         } else if (ctx.getChildCount() === 2) {
+            if (ctx.IDENTIFIER() != null){
+                return {
+                    tag: "nam", 
+                    isBorrow: true,
+                    sym: ctx.getText()
+                }
+            }
             // Unary operator case
+
             return {
                 tag: "unop",
-                sym: ctx.getChild(0).getText(),
+                sym: ctx.getChild(0).getText() === '!'? '!' : '-unary',
                 frst: this.visit(ctx.getChild(1) as ExpressionContext)
             }
+
         } else if (ctx.getChildCount() === 3) {
             if (ctx.getChild(0).getText() === '(' && ctx.getChild(2).getText() === ')') {
                 // Parenthesized expression
