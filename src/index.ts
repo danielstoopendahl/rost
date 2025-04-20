@@ -5,8 +5,18 @@ import { evaluate } from "./LocalEvaluator";
 // const { runnerPlugin, conduit } = initialise(RostEvaluator);
 
 const program = `
-låt mut a : i32 = 4;
+låt räknare: i32 = 0;
 
+fn inc(a: i32) -> i32 {
+    om (a > 10){
+        returnera a;
+    }annars{
+        returnera inc(a + 1);
+    }
+    
+}
+
+inc(räknare);
 
 `
 
