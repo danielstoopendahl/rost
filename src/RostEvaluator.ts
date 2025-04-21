@@ -7,17 +7,32 @@ import { go } from './RostVM';
 import { check_type } from './TypeChecker';
 import { RostJSONBuilder } from "./TreeBuilder";
 
-
+/**
+ * The `RostEvaluator` class is responsible for evaluating Rost code chunks.
+ * It parses the input, generates a JSON representation of the program,
+ * performs type checking, and executes the program using the Rost virtual machine.
+ */
 export class RostEvaluator extends BasicEvaluator {
     private executionCount: number;
     private visitor: RostJSONBuilder;
 
+    /**
+     * Constructs a new `RostEvaluator` instance.
+     * @param conductor - The conductor plugin used for communication with the REPL.
+     */
     constructor(conductor: IRunnerPlugin) {
         super(conductor);
         this.executionCount = 0;
         this.visitor = new RostJSONBuilder();
     }
 
+    /**
+     * Evaluates a chunk of Rost code.
+     * This involves parsing the input, generating a JSON parse tree,
+     * performing type checking, and executing the program.
+     * @param chunk - The Rost code to evaluate.
+     * @returns A promise that resolves when evaluation is complete.
+     */
     async evaluateChunk(chunk: string): Promise<void> {
         this.executionCount++;
         try {

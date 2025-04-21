@@ -1,13 +1,25 @@
 import { AbstractParseTreeVisitor } from 'antlr4ng';
 import { ProgContext, LetStmtContext, ExpressionContext, SequenceContext, AssignmentContext, WhileStmtContext, BreakStmtContext, IfStmtContext, BlockContext, FunDeclContext, ParamListContext, ReturnStatementContext, ContinueStmtContext, FunctionCallExpressionContext, ExpressionStatementContext } from './parser/grammar/RostParser';
 import { RostVisitor } from './parser/grammar/RostVisitor';
-
+/**
+ * A visitor class that converts a parse tree into a JSON representation of the program.
+ */
 export class RostJSONBuilder extends AbstractParseTreeVisitor<object> implements RostVisitor<object> {
 
+    /**
+     * Visits the root program node.
+     * @param ctx - The program context.
+     * @returns A JSON object representing the program.
+     */
     visitProg(ctx: ProgContext): object {
         return {tag: "blk", body: this.visit(ctx.sequence())};
     }
 
+    /**
+     * Visits a sequence of statements.
+     * @param ctx - The sequence context.
+     * @returns A JSON object representing the sequence of statements.
+     */
     visitSequence(ctx: SequenceContext): object {
         let stmts = []
 
@@ -22,6 +34,11 @@ export class RostJSONBuilder extends AbstractParseTreeVisitor<object> implements
         }
     }
 
+    /**
+     * Visits a let statement.
+     * @param ctx - The let statement context.
+     * @returns A JSON object representing the let statement.
+     */
     visitLetStmt(ctx: LetStmtContext): object {
         return {
             tag: "let",
@@ -31,6 +48,11 @@ export class RostJSONBuilder extends AbstractParseTreeVisitor<object> implements
         }
     }
 
+    /**
+     * Visits an assignment statement.
+     * @param ctx - The assignment context.
+     * @returns A JSON object representing the assignment statement.
+     */
     visitAssignment(ctx: AssignmentContext): object {
         return {
             tag: "assmt",
@@ -39,6 +61,12 @@ export class RostJSONBuilder extends AbstractParseTreeVisitor<object> implements
         }
     }
 
+    /**
+     * Visits an expression.
+     * Handles function calls, literals, unary and binary operations, and identifiers.
+     * @param ctx - The expression context.
+     * @returns A JSON object representing the expression.
+     */
     visitExpression(ctx: ExpressionContext): object {
         if (ctx.functionCallExpression() != null){
             const nctx = ctx.getChild(0) as FunctionCallExpressionContext
@@ -113,6 +141,11 @@ export class RostJSONBuilder extends AbstractParseTreeVisitor<object> implements
         }
     }
 
+    /**
+     * Visits a while statement.
+     * @param ctx - The while statement context.
+     * @returns A JSON object representing the while statement.
+     */
     visitWhileStmt(ctx: WhileStmtContext): object{
         return {
             tag: "while",
@@ -121,18 +154,33 @@ export class RostJSONBuilder extends AbstractParseTreeVisitor<object> implements
         }   
     }
 
+    /**
+     * Visits a break statement.
+     * @param ctx - The break statement context.
+     * @returns A JSON object representing the break statement.
+     */
     visitBreakStmt(ctx: BreakStmtContext): object{
         return {
             tag: "break"
         }
     }
     
+    /**
+     * Visits a continue statement.
+     * @param ctx - The continue statement context.
+     * @returns A JSON object representing the continue statement.
+     */
     visitContinueStmt(ctx: ContinueStmtContext) : object{
         return {
             tag: "cont"
         }
     }
 
+    /**
+     * Visits an if statement.
+     * @param ctx - The if statement context.
+     * @returns A JSON object representing the if statement.
+     */
     visitIfStmt(ctx: IfStmtContext): object{
         return {
             tag: "cond", 
@@ -143,6 +191,11 @@ export class RostJSONBuilder extends AbstractParseTreeVisitor<object> implements
 
     }
 
+    /**
+     * Visits an expression statement.
+     * @param ctx - The expression statement context.
+     * @returns A JSON object representing the expression statement.
+     */
     visitExpressionStatement(ctx: ExpressionStatementContext): object{
         return {
             tag: "expr_stmt",
@@ -150,6 +203,12 @@ export class RostJSONBuilder extends AbstractParseTreeVisitor<object> implements
         }
 
     }
+
+    /**
+     * Visits a block of statements.
+     * @param ctx - The block context.
+     * @returns A JSON object representing the block.
+     */
     visitBlock(ctx: BlockContext): object{
         return {
             tag: "blk",
@@ -157,6 +216,11 @@ export class RostJSONBuilder extends AbstractParseTreeVisitor<object> implements
         }
     }
 
+    /**
+     * Visits a function declaration.
+     * @param ctx - The function declaration context.
+     * @returns A JSON object representing the function declaration.
+     */
     visitFunDecl(ctx: FunDeclContext): object {
         let params = []
         let funType = {
@@ -182,6 +246,11 @@ export class RostJSONBuilder extends AbstractParseTreeVisitor<object> implements
         }
     }
 
+    /**
+     * Visits a return statement.
+     * @param ctx - The return statement context.
+     * @returns A JSON object representing the return statement.
+     */
     visitReturnStatement(ctx: ReturnStatementContext): object{
         return {
             tag: "ret",
