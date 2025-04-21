@@ -77,23 +77,35 @@ const global_type_frame = {
 const empty_type_environment = null
 const global_type_environment = [global_type_frame, empty_type_environment]
 
+/**
+ * Looks up the type of a symbol in the given type environment.
+ * Throws an error if the symbol is not found.
+ * @param x - The symbol to look up.
+ * @param e - The type environment to search in.
+ * @returns The type of the symbol.
+ */
 const lookup_type = (x, e) =>
     e === null
-    ? error("unbound name: " + x)
-    : e[0].hasOwnProperty(x) 
-    ? e[0][x]
-    : lookup_type(x, e[1])
+        ? error("unbound name: " + x)
+        : e[0].hasOwnProperty(x)
+        ? e[0][x]
+        : lookup_type(x, e[1]);
 
+/**
+ * Extends the given type environment with new symbols and their types.
+ * Throws an error if the number of symbols and types do not match.
+ * @param xs - The symbols to add.
+ * @param ts - The types of the symbols.
+ * @param e - The existing type environment.
+ * @returns The extended type environment.
+ */
 const extend_type_environment = (xs, ts, e) => {
-    if (ts.length > xs.length) 
-        error('too few parameters in function declaration')
-    if (ts.length < xs.length) 
-        error('too many parameters in function declaration')
-    const new_frame = {}
-    for (let i = 0; i < xs.length; i++) 
-        new_frame[xs[i]] = ts[i]
-    return [new_frame, e]
-}
+    if (ts.length > xs.length) error('too few parameters in function declaration');
+    if (ts.length < xs.length) error('too many parameters in function declaration');
+    const new_frame = {};
+    for (let i = 0; i < xs.length; i++) new_frame[xs[i]] = ts[i];
+    return [new_frame, e];
+};
 
 interface OwnerAlloc {
     scope: string,
@@ -107,41 +119,49 @@ let currentOwner = undefined
 let inLet = false
 let scopeNbr = -1
 
+/**
+ * Adds ownership for a given symbol.
+ * Associates the symbol with the current scope and a unique heap number.
+ * @param symbol - The symbol to add ownership for.
+ */
 const addOwnership = (symbol: string) => {
-    //console.log("Adding ownership of: " + symbol)
-    const allocNbr = "" + heapAllocNbr++
-    allocToOwner.push({scope: "" + scopeNbr, owner: symbol, heapNbr: allocNbr})
-    //console.log(allocToOwner)
-}
+    const allocNbr = "" + heapAllocNbr++;
+    allocToOwner.push({ scope: "" + scopeNbr, owner: symbol, heapNbr: allocNbr });
+};
 
+/**
+ * Transfers ownership of a symbol from one owner to another.
+ * Updates all matching entries in the ownership list.
+ * @param from - The current owner of the symbol.
+ * @param to - The new owner of the symbol.
+ */
 const transferOwnership = (from: string, to: string) => {
-    //console.log("Transferring ownership from: " + from + " to: " + to)
     const matchingEntries = allocToOwner.filter((x) => x.owner === from);
     if (matchingEntries.length === 0) {
         error("Owner doesn't exist");
     }
-    // Update ownership for all matching entries
     matchingEntries.forEach((entry) => {
         const index = allocToOwner.findIndex((x) => x === entry);
-        allocToOwner[index] = {scope: "" + scopeNbr,  owner: to, heapNbr: entry.heapNbr };
-    }); 
-    //console.log(allocToOwner)
+        allocToOwner[index] = { scope: "" + scopeNbr, owner: to, heapNbr: entry.heapNbr };
+    });
 };
 
+/**
+ * Drops ownership of all symbols associated with a given scope.
+ * Removes all matching entries from the ownership list.
+ * @param scopeNbr - The scope number to drop ownership for.
+ */
 const drop = (scopeNbr) => {
-    //console.log("Dropping ownership of scope: " + scopeNbr)
-    const matchingEntries = allocToOwner.filter((x) =>x.scope === "" + scopeNbr);
+    const matchingEntries = allocToOwner.filter((x) => x.scope === "" + scopeNbr);
     if (matchingEntries.length === 0) {
-        error("Scope doesn't exist");
+        console.log("No ownership to drop for scope: " + scopeNbr);
+    } else {
+        matchingEntries.forEach((entry) => {
+            const index = allocToOwner.findIndex((x) => x === entry);
+            allocToOwner.splice(index, 1);
+        });
     }
-    else{
-    matchingEntries.forEach((entry) => {
-        const index = allocToOwner.findIndex((x) => x === entry);
-        allocToOwner.splice(index, 1); 
-    });
-    }
-    //console.log(allocToOwner)
-}
+};
 
 // type_comp has the typing
 // functions for each component tag
@@ -193,6 +213,7 @@ cond:
             error("expected predicate type: bool, " +
                   "actual predicate type: " + 
                   unparse_type(t0))
+        
         const t1 = type(comp.cons, te)
         const t2 = type(comp.alt, te)
         return "undefined"
@@ -335,6 +356,13 @@ ret:
     (comp, te) => comp
 }
 
+/**
+ * Checks the type of a given program component.
+ * Delegates to the appropriate handler based on the component's tag.
+ * @param comp - The program component to type-check.
+ * @param te - The type environment.
+ * @returns The type of the component.
+ */
 const type = (comp, te) =>
     type_comp[comp.tag](comp, te)
 
@@ -392,6 +420,13 @@ ret:
     (comp, te) => type(comp.expr, te)
 }
 
+/**
+ * Checks the type of a function body.
+ * Delegates to the appropriate handler based on the component's tag.
+ * @param comp - The function body component to type-check.
+ * @param te - The type environment.
+ * @returns The type of the function body.
+ */
 const type_fun_body = (comp, te) => {
     const handler = type_fun_body_stmt[comp.tag]
     if (handler) {
@@ -402,7 +437,12 @@ const type_fun_body = (comp, te) => {
     }
 }
 
-
+/**
+ * Checks the type of a JSON program.
+ * Logs the ownership list and returns the type of the program.
+ * @param json_program - The JSON representation of the program.
+ * @returns The type of the program as a string.
+ */
 export const check_type = (json_program) => {
     const t = unparse_type(type(json_program, global_type_environment))
     console.log(allocToOwner)

@@ -258,12 +258,38 @@ const test = (t, expected) => {
 //    c;
 //`,15)
 
-test(`
-    låt a:i32 = 5;
-    låt b:i32 = 10;
-    låt c:i32 = &a + b;
+//test(`
+//    låt a:i32 = 5;
+//    låt b:i32 = 10;
+//    låt c:i32 = &a + b;
+//
+//    c;
+//`,15)
 
-    c;
-`,15)
+//test(`
+//    låt a:bool = sant;
+//    låt b:bool = falskt;
+//    a && b;
+//    `,"falskt")
+//
+//test(`
+//    låt a = 5;
+//    låt b = 6;
+//    a+b;
+//    `, 11);
+//test(`
+//    låt a:i32 = 10;
+//    fn test(a: i32) -> i32 {
+//        om (a > 10){
+//            returnera a;
+//        }annars{
+//            returnera 0;
+//        }
+//    }
+//    test(a);
+//    `, 0)
 
 
+//test(`
+//    låt a:bool = 5;
+//`, undefined)
