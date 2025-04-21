@@ -7,7 +7,6 @@ import { RostJSONBuilder } from "./TreeBuilder";
 
 
 export function evaluate(chunk: string) {
-    try {
         const visitor: RostJSONBuilder = new RostJSONBuilder();
 
 
@@ -28,12 +27,5 @@ export function evaluate(chunk: string) {
         return go(json_program, 1600)
 
         
-    }  catch (error) {
-        // Handle errors and send them to the REPL
-        if (error instanceof Error) {
-            console.log(`Error: ${error.message}`);
-        } else {
-            console.log(`Error: ${String(error)}`);
-        }
-    }
+
 }
