@@ -7,6 +7,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "rollup -c",
+    "buildtest": "rollup -c rollup.test.config.js",
     "generate-parser": "antlr4ng -Dlanguage=TypeScript -visitor -o src/parser grammar/Rost.g4"
 
   },
