@@ -154,7 +154,7 @@ const transferOwnership = (from: string, to: string) => {
 const drop = (scopeNbr) => {
     const matchingEntries = allocToOwner.filter((x) => x.scope === "" + scopeNbr);
     if (matchingEntries.length === 0) {
-        console.log("No ownership to drop for scope: " + scopeNbr);
+        // console.log("No ownership to drop for scope: " + scopeNbr);
     } else {
         matchingEntries.forEach((entry) => {
             const index = allocToOwner.findIndex((x) => x === entry);
@@ -259,7 +259,6 @@ app:
         const expected_arg_types = fun_type.args
         const actual_arg_types = comp.args.map(e => {
             const t = type(e, te)
-            console.log(t)
             if (comp.fun.sym in global_type_frame){
                 if (t[0] === "&"){
                     return t.slice(1)
@@ -445,7 +444,6 @@ const type_fun_body = (comp, te) => {
  */
 export const check_type = (json_program) => {
     const t = unparse_type(type(json_program, global_type_environment))
-    console.log(allocToOwner)
     return t
     
 }
